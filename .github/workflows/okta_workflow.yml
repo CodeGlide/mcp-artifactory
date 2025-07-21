@@ -1,4 +1,4 @@
-name: Okta--CodeGlide MCP generation
+name: Okta-CodeGlide MCP generation
 
 on:
   workflow_dispatch:
