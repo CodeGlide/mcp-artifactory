@@ -1,0 +1,1313 @@
+openapi: 3.0.3
+info:
+  title: Square Connect API
+  description: |-
+    The Square Webhooks API is used to manage webhook subscriptions.
+
+    This specification is not actually supported by Switchboard since the API is designed to be used by the Square 
+    dashboard and authentication is based on cookies and not the traditional OAuth 2.0 flows. This specification can 
+    only be used to use a webhook as a board trigger, and it's the user's responsibility to configure the webhook 
+    themselves from the Square dashboard.
+    
+    Note: This specification is a work-in-progress, currently only customer.created has been implemented.
+  termsOfService: https://connect.squareup.com/tos
+  contact:
+    name: Square Developer Platform
+    url: https://squareup.com/developers
+    email: developers@squareup.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: "2.0"
+externalDocs:
+  description: "Read the official documentation here:"
+  url: https://docs.connect.squareup.com/
+servers:
+  - url:  https://connect.squareup.com/v2/
+    description: Production
+  - url: https://connect.squareupsandbox.com/v2/
+    description: Sandbox
+# webhook-mode informs Switchboard how webhooks should be handled when boards are published
+x-versori-webhook-mode: manual
+# allowed-operation-ids provides Switchboard a list of allowed operations which the user can select, other operations
+# should be disallowed.
+x-versori-allowed-operation-ids:
+  - CreateWebhookSubscription
+paths:
+  /webhooks/subscriptions:
+    post:
+      operationId: CreateWebhookSubscription
+      summary: CreateWebhookSubscription
+      description: |-
+        Create a new webhook subscription
+      requestBody:
+        description: |-
+          Request body to create a new webhook subscription
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateWebhookSubscription"
+      responses:
+        200:
+          description: Successfully created a new webhook subscription
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebhookSubscriptionResult"
+      callbacks:
+        customer.created:
+          "{$request.body#/notification_url}":
+            post:
+              requestBody:
+                content:
+                  application/json:
+                    schema:
+                      $ref: "#/components/schemas/CustomerCreatedWebhookEvent"
+              responses:
+                "200":
+                  description: Successfully handled webhook callback request
+                  content:
+                    application/json:
+                      schema:
+                        $ref: "#/components/schemas/NoContent"
+        order.created:
+          "{$request.body#/notification_url}":
+            post:
+              requestBody:
+                content:
+                  application/json:
+                    schema:
+                      $ref: "#/components/schemas/OrderCreatedWebhookEvent"
+              responses:
+                "200":
+                  description: Successfully handled webhook callback request
+                  content:
+                    application/json:
+                      schema:
+                        $ref: "#/components/schemas/NoContent"
+  /orders/{order_id}:
+    get:
+      operationId: RetrieveOrder
+      summary: RetrieveOrder
+      description: |-
+        Retrieves an order by ID.
+      parameters:
+        - name: order_id
+          in: path
+          description: The order's ID.
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully retrieved an order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+  /customers/{customer_id}:
+    get:
+      operationId: RetrieveCustomer
+      summary: RetrieveCustomer
+      description: |-
+        Retrieves a customer by ID.
+      parameters:
+        - name: customer_id
+          in: path
+          description: The customer's ID.
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully retrieved a customer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+components:
+  schemas:
+    CreateWebhookSubscription:
+      type: object
+      properties:
+        idompotency_key:
+          type: string
+        subscription:
+          $ref: "#/components/schemas/WebhookSubscription"
+      required:
+        - application_id
+        - name
+        - enabled
+        - event_types
+        - notification_url
+        - version
+    WebhookSubscription:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        enabled:
+          type: boolean
+        event_types:
+          type: array
+          items:
+            type: string
+        notification_url:
+          type: string
+        signature_key:
+          type: string
+        api_version:
+          type: string
+      required:
+        - id
+        - name
+        - enabled
+        - event_types
+        - notification_url
+        - signature_key
+        - version
+    WebhookSubscriptionResult:
+      type: object
+      properties:
+        subscription:
+          $ref: "#/components/schemas/WebhookSubscription"
+      required:
+        - subscription
+    NoContent:
+      description: A response with no content
+    CustomerCreatedWebhookEvent:
+      description: Event payload for customer.created events
+      type: object
+      properties:
+        event_id:
+          description: |-
+            The unique ID of the event, which is used for 
+            [idempotency support](https://developer.squareup.com/docs/webhooks/step4manage#webhooks-best-practices)
+          type: string
+        data:
+          $ref: "#/components/schemas/CustomerCreatedWebhookData"
+        created_at:
+          description: |-
+            Read only The timestamp of when the event was created, in RFC 3339 format.
+
+            Examples for January 25th, 2020 6:25:34pm Pacific Standard Time:
+
+            UTC: 2020-01-26T02:25:34Z
+
+            Pacific Standard Time with UTC offset: 2020-01-25T18:25:34-08:00
+          type: string
+        merchant_id:
+          description: The ID of the seller associated with the event.
+          type: string
+        type:
+          description: The type of event. For this object, the value is customer.created.
+          type: string
+      required:
+        - event_id
+        - data
+        - created_at
+        - merchant_id
+        - type
+    CustomerCreatedWebhookData:
+      description: The data associated with the event.
+      type: object
+      properties:
+        id:
+          description: The ID of the new customer.
+          type: string
+        type:
+          description: The type of object affected by the event. For this event, the value is "customer".
+          type: string
+        object:
+          $ref: "#/components/schemas/CustomerCreatedWebhookObject"
+      required:
+        - id
+        - type
+        - object
+    CustomerCreatedWebhookObject:
+      description: An object that contains the new customer.
+      type: object
+      properties:
+        customer:
+          $ref: "#/components/schemas/Customer"
+        event_context:
+          $ref: "#/components/schemas/CustomerCreatedWebhookEventContext"
+      required:
+        - customer
+    CustomerCreatedWebhookEventContext:
+      description: |-
+        Information about the change that triggered the event. This field is returned only if the customer is created
+        by a merge operation.
+      type: object
+      properties:
+        merge:
+          $ref: "#/components/schemas/CustomerCreatedWebhookEventContextMerge"
+      required:
+        - merge
+    CustomerCreatedWebhookEventContextMerge:
+      description: Information about the merge operation associated with the event.
+      type: object
+      properties:
+        from_customer_ids:
+          description: The IDs of the existing customers that were merged and then deleted.
+          type: array
+          items:
+            type: string
+        to_customer_id:
+          description: The ID of the new customer created by the merge.
+          type: string
+      required:
+        - from_customer_ids
+        - to_customer_id
+    Customer:
+      type: object
+      properties:
+        id:
+          description: |-
+            A unique Square-assigned ID for the customer profile.
+
+            If you need this ID for an API request, use the ID returned when you created the customer profile or call
+            the SearchCustomers or ListCustomers endpoint.
+          type: string
+        reference_id:
+          description: An optional second ID used to associate the customer profile with an entity in another system.
+          type: string
+        given_name:
+          description: The given name (that is, the first name) associated with the customer profile.
+          type: string
+        family_name:
+          description: The family name (that is, the last name) associated with the customer profile.
+          type: string
+        nickname:
+          description: A nickname for the customer profile.
+          type: string
+        email_address:
+          description: The email address associated with the customer profile.
+          type: string
+        phone_number:
+          description: |-
+            The phone number associated with the customer profile. A phone number can contain 9–16 digits, with an 
+            optional + prefix.
+          type: string
+        company_name:
+          description: A business name associated with the customer profile.
+          type: string
+        preferences:
+          $ref: "#/components/schemas/CustomerPreferences"
+        address:
+          $ref: "#/components/schemas/CustomerAddress"
+        birthday:
+          description: |-
+            The birthday associated with the customer profile, in RFC 3339 format. The year is optional. The timezone 
+            and time are not allowed. For example, 0000-09-21T00:00:00-00:00 represents a birthday on September 21 
+            and 1998-09-21T00:00:00-00:00 represents a birthday on September 21, 1998.
+          type: string
+        tax_ids:
+          $ref: '#/components/schemas/CustomerTaxIds'
+        note:
+          description: A custom note associated with the customer profile.
+          type: string
+        creation_source:
+          description: The method used to create the customer profile.
+          type: string
+        segment_ids:
+          description: The IDs of segments the customer belongs to.
+          type: array
+          items:
+            type: string
+        group_ids:
+          description: The IDs of customer groups the customer belongs to.
+          type: array
+          items:
+            type: string
+        created_at:
+          description: |-
+            Read only The timestamp when the customer profile was created, in RFC 3339 format.
+
+            Examples for January 25th, 2020 6:25:34pm Pacific Standard Time:
+
+            UTC: 2020-01-26T02:25:34Z
+
+            Pacific Standard Time with UTC offset: 2020-01-25T18:25:34-08:00
+          type: string
+        updated_at:
+          description: |-
+            Read only The timestamp when the customer profile was last updated, in RFC 3339 format.
+
+            Examples for January 25th, 2020 6:25:34pm Pacific Standard Time:
+
+            UTC: 2020-01-26T02:25:34Z
+
+            Pacific Standard Time with UTC offset: 2020-01-25T18:25:34-08:00
+          type: string
+        version:
+          description: |-
+            The Square-assigned version number of the customer profile. The version number is incremented each time 
+            an update is committed to the customer profile, except for changes to customer segment membership and 
+            cards on file.
+          type: number
+      required:
+        - id
+        - given_name
+        - family_name
+        - email_address
+        - phone_number
+        - address
+        - preferences
+        - creation_source
+        - created_at
+        - updated_at
+        - version
+    CustomerPreferences:
+      description: Represents general customer preferences.
+      type: object
+      properties:
+        email_unsubscribed:
+          description: |-
+            Indicates whether the customer has unsubscribed from marketing campaign emails. A value of true means 
+            that the customer chose to opt out of email marketing from the current Square seller or from all Square 
+            sellers. This value is read-only from the Customers API.
+          type: boolean
+    CustomerAddress:
+      description: The physical address associated with the customer profile.
+      type: object
+      properties:
+        address_line_1:
+          type: string
+        locality:
+          type: string
+        administrative_district_level_1:
+          type: string
+        postal_code:
+          type: string
+    CustomerTaxIds:
+      description: |-
+        The tax ID associated with the customer profile. This field is present only for customers of sellers in EU 
+        countries or the United Kingdom. For more information, see Customer tax IDs.
+      type: object
+      properties:
+        eu_vat:
+          description: |-
+            The EU VAT identification number for the customer. For example, IE3426675K. The ID can contain alphanumeric
+            characters only.
+          type: string
+          maxLength: 20
+    OrderCreatedWebhookEvent:
+      description: An event that indicates that a new order was created.
+      type: object
+      properties:
+        merchant_id:
+          description: The ID of the merchant that created the order.
+          type: string
+        type:
+          description: The type of the event.
+          type: string
+        event_id:
+          description: The ID of the event.
+          type: string
+        created_at:
+          type: string
+        data:
+          $ref: "#/components/schemas/OrderCreatedWebhookData"
+      required:
+        - merchant_id
+        - type
+        - event_id
+        - created_at
+        - data
+    OrderCreatedWebhookData:
+      description: The data included in the event.
+      type: object
+      properties:
+        id: 
+          description: The ID of the order.
+          type: string
+        type:
+          description: The type of the event.
+          type: string
+        object:
+          $ref: "#/components/schemas/OrderCreatedWebhookObject"
+      required:
+        - id
+        - type
+        - object
+    OrderCreatedWebhookObject:
+      description: The object included in the event.
+      type: object
+      properties:
+        order_created:
+          $ref: "#/components/schemas/OrderCreatedWebhookOrder"
+      required:
+        - order_created
+    OrderCreatedWebhookOrder:
+      description: The order included in the event.
+      type: object
+      properties:
+        order_id:
+          description: The ID of the order.
+          type: string
+        version:
+          description: The version of the order.
+          type: integer
+        location_id:
+          description: The ID of the location where the order was created.
+          type: string
+        state:
+          description: The state of the order.
+          type: string
+        created_at:
+          description: The timestamp when the order was created, in RFC 3339 format.
+          type: string
+      required:
+        - order_id
+        - version
+        - location_id
+        - state
+        - created_at
+    Order: 
+      type: object
+      properties:
+        id:
+          description: The order's unique ID.
+          type: string
+        location_id:
+          description: The ID of the order's associated location.
+          type: string
+        reference_id:
+          description: An optional ID you can associate with the order for your own purposes (such as to associate the order with an entity ID in your own database).
+          type: string
+        source:
+          type: object
+          properties: 
+            name:
+              description: The name of the online store or marketplace where the order originated.
+              type: string
+        customer_id:
+          description: The ID of the customer associated with the order.
+          type: string
+        line_items:
+          description: The line items included in the order.
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderLineItem"
+        service_charges:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderServiceCharge"
+        fulfillments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Fulfillment"
+        returns:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderReturn"
+        return_amounts:
+          $ref: "#/components/schemas/OrderMoneyAmounts"
+        net_amounts:
+          $ref: "#/components/schemas/OrderMoneyAmounts"
+        rounding_adjustment:
+          $ref: "#/components/schemas/OrderRoundingAdjustment"
+        tenders:
+          type: array
+          items:
+            $ref: "#/components/schemas/Tender"
+        refunds:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderRefund"
+        created_at:
+          description: The time when the order was created, in RFC 3339 format.
+          type: string
+        updated_at:
+          description: The time when the order was last updated, in RFC 3339 format.
+          type: string
+        closed_at:
+          description: The time when the order was closed, in RFC 3339 format.
+          type: string
+        state:
+          description: The current state of the order.
+          type: string
+        version:
+          description: The version number, which is incremented each time an update is committed to the order.
+          type: integer
+        total_money:
+          $ref: "#/components/schemas/Money"
+        total_tax_money:
+          $ref: "#/components/schemas/Money"
+        total_discount_money:
+          $ref: "#/components/schemas/Money"
+        total_tip_money:
+          $ref: "#/components/schemas/Money"
+        total_service_charge_money:
+          $ref: "#/components/schemas/Money"
+        ticket_name:
+          description: The name of the order's associated ticket.
+          type: string
+        pricing_options:
+          $ref: "#/components/schemas/OrderPricingOptions"
+        rewards:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderReward"
+        net_amount_due_money:
+          $ref: "#/components/schemas/Money"
+      required:
+        - location_id
+    OrderReturn:
+      type: object
+      properties:
+        uid:
+          type: string
+        source_order_id:
+          type: string
+        return_line_items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderReturnLineItem"
+        return_service_charges:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderReturnServiceCharge"
+        return_taxes:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderReturnTax"
+        return_discounts:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderReturnDiscount"
+        rounding_adjustment:
+          $ref: "#/components/schemas/OrderRoundingAdjustment"
+        return_amounts:
+          $ref: "#/components/schemas/OrderMoneyAmounts"
+    OrderReturnLineItem:
+      type: object
+      properties:
+        uid: 
+          type: string
+        source_line_item_uid:
+          type: string
+        name: 
+          type: string
+        quantity:
+          type: string
+        quantity_unit:
+          $ref: "#/components/schemas/OrderQuantityUnit"
+        note:
+          type: string
+        catalog_object_id:
+          type: string
+        catalog_version:
+          type: integer
+        variation_name:
+          type: string
+        item_type:
+          type: string
+        return_modifiers:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderReturnLineItemModifier"
+        applied_taxes:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderLineItemAppliedTax"
+        applied_discounts:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderLineItemAppliedDiscount"
+        base_price_money:
+          $ref: "#/components/schemas/Money"
+        variation_total_price_money:
+          $ref: "#/components/schemas/Money"
+        gross_return_money:
+          $ref: "#/components/schemas/Money"
+        total_tax_money:
+          $ref: "#/components/schemas/Money"
+        total_discount_money:
+          $ref: "#/components/schemas/Money"
+        total_money:
+          $ref: "#/components/schemas/Money"
+      required:
+        - quantity
+    OrderReturnLineItemModifier:
+      type: object
+      properties: 
+        uid:
+          type: string
+        source_modifier_uid:
+          type: string
+        catalog_object_id:
+          type: string
+        catalog_version:
+          type: integer
+        name:
+          type: string
+        base_price_money:
+          $ref: "#/components/schemas/Money"
+        total_price_money:
+          $ref: "#/components/schemas/Money"
+    OrderReturnServiceCharge:
+      type: object
+      properties:
+        uid:
+          type: string
+        source_service_charge_uid:
+          type: string
+        name:
+          type: string
+        catalog_object_id:
+          type: string
+        catalog_version:
+          type: integer
+        percentage:
+          type: string
+        amount_money:
+          $ref: "#/components/schemas/Money"
+        applied_money:
+          $ref: "#/components/schemas/Money"
+        total_money:
+          $ref: "#/components/schemas/Money"
+        total_tax_money:
+          $ref: "#/components/schemas/Money"
+        calculation_phase:
+          type: string
+        taxable:
+          type: boolean
+        applied_taxes:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderLineItemAppliedTax"
+    OrderReturnTax:
+      type: object
+      properties:
+        uid: 
+          type: string
+        source_tax_uid:
+          type: string
+        catalog_object_id:
+          type: string
+        catalog_version:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+        percentage:
+          type: string
+        applied_money:
+          $ref: "#/components/schemas/Money"
+        scope:
+          type: string
+    OrderReturnDiscount:
+      type: object
+      properties:
+        uid:
+          type: string
+        source_discount_uid:
+          type: string
+        catalog_object_id:
+          type: string
+        catalog_version:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+        percentage:
+          type: string
+        amount_money:
+          $ref: "#/components/schemas/Money"
+        applied_money:
+          $ref: "#/components/schemas/Money"
+        scope:
+          type: string
+    OrderRefund:
+      type: object
+      properties:
+        id:
+          type: string
+        location_id:
+          type: string
+        transaction_id:
+          type: string
+        tender_id:
+          type: string
+        created_at:
+          type: string
+        reason:
+          type: string
+        amount_money:
+          $ref: "#/components/schemas/Money"
+        status:
+          type: string
+        processing_fee_money:
+          $ref: "#/components/schemas/Money"
+      required: 
+        - id
+        - location_id
+        - tender_id
+        - reason
+        - amount_money
+        - status
+    OrderRoundingAdjustment:
+      type: object
+      properties:
+        uid:
+          type: string
+        name:
+          type: string
+        amount_money:
+          $ref: "#/components/schemas/Money"
+    OrderMoneyAmounts:
+      type: object
+      properties:
+        total_money:
+          $ref: "#/components/schemas/Money"
+        tax_money:
+          $ref: "#/components/schemas/Money"
+        discount_money:
+          $ref: "#/components/schemas/Money"
+        tip_money:
+          $ref: "#/components/schemas/Money"
+        service_charge_money:
+          $ref: "#/components/schemas/Money"
+    OrderPricingOptions:
+      type: object
+      properties:
+        auto_apply_discounts:
+          type: boolean
+        auto_apply_taxes:
+          type: boolean
+    OrderLineItem:
+      type: object
+      properties:
+        uid: 
+          description: The line item's unique ID.
+          type: string
+        name:
+          description: The name of the line item.
+          type: string
+        quantity:
+          description: The quantity purchased, formatted as a decimal number.
+          type: string
+        quantity_unit:
+          $ref: "#/components/schemas/OrderQuantityUnit"
+        note:
+          type: string
+        catalog_object_id:
+          type: string
+        catalog_version:
+          type: integer
+        variation_name:
+          type: string
+        item_type:
+          type: string
+        modifiers:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderLineItemModifier"
+        applied_taxes:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderLineItemAppliedTax"
+        applied_discounts:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderLineItemAppliedDiscount"
+        base_price_money:
+          $ref: "#/components/schemas/Money"
+        variation_total_price_money:
+          $ref: "#/components/schemas/Money"
+        gross_sales_money:
+          $ref: "#/components/schemas/Money"
+        total_tax_money:
+          $ref: "#/components/schemas/Money"
+        total_discount_money:
+          $ref: "#/components/schemas/Money"
+        total_money:
+          $ref: "#/components/schemas/Money"
+        pricing_blocklists:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderLineItemPricingBlocklists"
+      required:
+        - quantity
+    OrderQuantityUnit:
+      type: object
+      properties:
+        measurement_unit:
+          type: object
+          properties:
+            name: 
+              type: string
+            abbreviation:
+              type: string
+          required:
+            - name
+            - abbreviation
+        precision:
+          description: |-
+            The precision of the quantity, in number of decimal places. For example, a precision of 2 
+            indicates that the quantity can be split into hundredths.
+          type: integer
+        catalog_object_id:
+          description: The ID of the CatalogObject representing the unit used to measure the line item quantity.
+          type: string
+        catalog_version:
+          description: The version of the CatalogObject representing the unit used to measure the line item quantity.
+          type: integer
+    OrderServiceCharge: 
+      type: object
+      properties:
+        uid:
+          description: The service charge's unique ID.
+          type: string
+        name:
+          description: The name of the service charge.
+          type: string
+        catalog_object_id:
+          description: The ID of the service charge's associated CatalogObject, if any.
+          type: string
+        catalog_version:
+          description: The version of the service charge's associated CatalogObject, if any.
+          type: integer
+        percentage:
+          description: The percentage of the service charge, as a string representation of a decimal number. A value of `7.25` corresponds to a percentage of 7.25%.
+          type: string
+        amount_money:
+          $ref: "#/components/schemas/Money"
+        applied_money:
+          $ref: "#/components/schemas/Money"
+        total_money:
+          $ref: "#/components/schemas/Money"
+        total_tax_money: 
+          $ref: "#/components/schemas/Money"
+        calculation_phase:
+          type: string
+        taxable:
+          type: boolean
+        applied_taxes:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderLineItemAppliedTax"
+        type: 
+          type: string
+    OrderLineItemModifier:
+      type: object
+      properties:
+        uid:
+          description: The modifier's unique ID.
+          type: string
+        catalog_object_id:
+          description: The ID of the item modifier applied to the line item.
+          type: string
+        catalog_version:
+          description: The version of the item modifier applied to the line item.
+          type: integer
+        name:
+          description: The name of the item modifier.
+          type: string
+        base_price_money:
+          $ref: "#/components/schemas/Money"
+        total_price_money:
+          $ref: "#/components/schemas/Money"
+    OrderLineItemAppliedTax:
+      type: object
+      properties: 
+        uid:
+          type: string
+        tax_uid:
+          type: string
+        applied_money:
+          $ref: "#/components/schemas/Money"
+      required:
+        - tax_uid
+    OrderLineItemAppliedDiscount:
+      type: object
+      properties:
+        uid:
+          type: string
+        discount_uid:
+          type: string
+        applied_money:
+          $ref: "#/components/schemas/Money"
+      required:
+        - discount_uid
+    OrderLineItemPricingBlocklists:
+      type: object
+      properties:
+        blocked_discounts:
+          type: array
+          items:
+            type: object
+            properties:
+              uid:
+                type: string
+              discount_uid:
+                type: string
+              discount_catalog_object_id:
+                type: string
+        blocked_taxes:
+          type: array
+          items:
+            type: object
+            properties:
+              uid:
+                type: string
+              tax_uid:
+                type: string
+              tax_catalog_object_id:
+                type: string
+    OrderReward:
+      type: object
+      properties:
+        id: 
+          description: The reward's unique ID.
+          type: string
+        reward_tier_id:
+          description: The ID of the reward tier that the reward belongs to.
+          type: string
+      required:
+        - id
+        - reward_tier_id
+    Fulfillment:
+      type: object
+      properties:
+        uid: 
+          description: The fulfillment's unique ID.
+          type: string
+        type:
+          description: The type of fulfillment.
+          type: string
+        state:
+          description: The current state of this fulfillment.
+          type: string
+        line_iten_application:
+          type: string
+        entries: 
+          type: array
+          items:
+            $ref: "#/components/schemas/FulfillmentEntry"
+        pickup_details:
+          $ref: "#/components/schemas/FulfillmentPickupDetails"
+    FulfillmentEntry:
+      type: object
+      properties:
+        uid:
+          type: string
+        line_item_uid:
+          type: string
+        quantity:
+          type: integer
+      required:
+        - line_item_uid
+        - quantity
+    FulfillmentPickupDetails:
+      type: object
+      properties:
+        recipient:
+          $ref: "#/components/schemas/FulfillmentRecipient"
+        expires_at:
+          type: string
+        auto_complete_duration:
+          type: string
+        schedule_type:
+          type: string
+        pickup_at:
+          type: string
+        pickup_window_duration:
+          type: string
+        prep_time_duration:
+          type: string
+        note:
+          type: string
+        placed_at:
+          type: string
+        accepted_at:
+          type: string
+        rejected_at:
+          type: string
+        ready_at:
+          type: string
+        expired_at:
+          type: string
+        picked_up_at:
+          type: string
+        canceled_at:
+          type: string
+        cancel_reason:
+          type: string
+        is_curbside_pickup:
+          type: boolean
+        curbside_pickup_details:
+          type: object
+          properties:
+            curbside_details:
+              type: string
+            buyer_arrived_at:
+              type: string
+    FulfillmentRecipient:
+      type: object
+      properties:
+        customer_id:
+          type: string
+        display_name:
+          type: string
+        email_address:
+          type: string
+        phone_number:
+          type: string
+        address: 
+          $ref: "#/components/schemas/Address"
+    FulfillmentShipmentDetails:
+      type: object
+      properties:
+        recipient:
+          $ref: "#/components/schemas/FulfillmentRecipient"
+        carrier:
+          type: string
+        shipping_note:
+          type: string
+        shipping_type:
+          type: string
+        tracking_number:
+          type: string
+        tracking_url:
+          type: string
+        placed_at:
+          type: string
+        in_progress_at:
+          type: string
+        packaged_at:
+          type: string
+        expected_shipped_at:
+          type: string
+        shipped_at:
+          type: string
+        canceled_at:
+          type: string
+        cancel_reason:
+          type: string
+        failed_at:
+          type: string
+        failure_reason:
+          type: string
+    FulfillmentDeliveryDetails:
+      type: object
+      properties:
+        recipient:
+          $ref: "#/components/schemas/FulfillmentRecipient"
+        schedule_type:
+          type: string
+        placed_at:
+          type: string
+        deliver_at:
+          type: string
+        prep_time_duration:
+          type: string
+        deliver_window_duration:
+          type: string
+        note:
+          type: string
+        completed_at:
+          type: string
+        in_progress_at:
+          type: string
+        rejected_at:
+          type: string
+        ready_at:
+          type: string
+        delivered_at:
+          type: string
+        canceled_at:
+          type: string
+        cancel_reason:
+          type: string
+        courier_pickup_at:
+          type: string
+        courier_pickup_window_duration:
+          type: string
+        is_no_contact_delivery:
+          type: boolean
+        dropoff_notes:
+          type: string
+        courier_provider_name:
+          type: string
+        courier_support_phone_number:
+          type: string
+        square_delivery_id:
+          type: string
+        external_delivery_id:
+          type: string
+        managed_delivery:
+          type: boolean
+    MeasurementUnit:
+      type: object
+      properties:
+        custom_unit:
+          description: |-
+            If set, the unit is a custom unit. The name of the custom unit is set in the name field of this object. 
+            The precision field is not used for custom units.
+          type: object
+          properties:
+            name:
+              description: The name of the unit.
+              type: string
+            abbreviation:
+              description: The abbreviation of the unit.
+              type: string
+        area_unit: 
+          description: Represents a standard area unit.
+          type: string
+        length_unit:
+          description: Represents a standard length unit.
+          type: string
+        volume_unit:
+          description: Represents a standard volume unit.
+          type: string
+        weight_unit:
+          description: Represents a standard weight unit.
+          type: string
+        generic_unit:
+          description: Represents a standard unit of a non-specific quantity.
+          type: string
+        time_unit:
+          description: Represents a standard time unit.
+          type: string
+        type:
+          description: The type of the unit.
+          type: string
+    Money:
+      type: object
+      properties:
+        amount:
+          description: The amount of money, in the smallest denomination of the currency indicated by currency.
+          type: integer
+        currency:
+          description: The currency code.
+          type: string
+    Tender: 
+      type: object
+      properties:
+        id:
+          description: The tender's unique ID.
+          type: string
+        location_id:
+          description: The ID of the tender's associated location.
+          type: string
+        transaction_id:
+          description: The ID of the tender's associated transaction.
+          type: string
+        created_at:
+          type: string
+        note:
+          type: string
+        amount_money:
+          $ref: "#/components/schemas/Money"
+        tip_money:
+          $ref: "#/components/schemas/Money"
+        processing_fee_money:
+          $ref: "#/components/schemas/Money"
+        customer_id:
+          type: string
+        type:
+          type: string
+        card_details:
+          $ref: "#/components/schemas/TenderCardDetails"
+        cash_details:
+          $ref: "#/components/schemas/TenderCashDetails"
+        payment_id:
+          type: string
+    TenderCardDetails:
+      type: object
+      properties:
+        status:
+          type: string
+        card:
+          $ref: "#/components/schemas/Card"
+        entry_method:
+          type: string
+    Card:
+      type: object
+      properties:
+        card_brand:
+          type: string
+        last_4:
+          type: string
+        exp_month:
+          type: integer
+        exp_year:
+          type: integer
+        bin:
+          type: string
+        card_type:
+          type: string
+        prepaid_type:
+          type: string
+        billing_address:
+          $ref: "#/components/schemas/Address"
+        version:
+          type: string
+        card_co_brand:
+          type: string
+        cardholder_name:
+          type: string
+        fingerprint:
+          type: string
+        customer_id:
+          type: string
+        merchant_id:
+          type: string
+        reference_id:
+          type: string
+        enabled:
+          type: boolean
+    TenderCashDetails:
+      type: object
+      properties:
+        buyer_tendered_money:
+          $ref: "#/components/schemas/Money"
+        change_back_money:
+          $ref: "#/components/schemas/Money"
+    Address:
+      type: object
+      properties:
+        address_line_1:
+          type: string
+        address_line_2:
+          type: string
+        address_line_3:
+          type: string
+        locality:
+          type: string
+        sublocality:
+          type: string
+        sublocality_2:
+          type: string
+        sublocality_3:
+          type: string
+        administrative_district_level_1:
+          type: string
+        administrative_district_level_2:
+          type: string
+        administrative_district_level_3:
+          type: string
+        postal_code:
+          type: string
+        country:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+  securitySchemes:
+    cookie:
+      type: apiKey
+      description: This API cannot be used externally and is only documented for use as Switchboard Webhook triggers
+      name: _connectv2-docs_session
+      in: cookie
+security:
+  - cookie: []

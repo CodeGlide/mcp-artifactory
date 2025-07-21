@@ -1,0 +1,293 @@
+openapi: 3.0.0
+info:
+  title: Jira Integration API
+  description: Jira Integration API
+  version: 1.0.0
+servers:
+  - url: http://{{baseurl}}
+tags:
+  - name: api
+  - name: api > services/jira/links
+  - name: api > services/jira/links > {link_id}
+paths:
+  /api/services/jira/links/{link_id}:
+    get:
+      tags:
+        - api > services/jira/links > {link_id}
+      summary: Show Link
+      description: |
+        Retrieves a single link.
+
+        #### Allowed For
+
+        * Admins
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: link_id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: (Required) The id of the link
+          example: <integer>
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                link:
+                  created_at: '2017-01-01T09:30:00Z'
+                  id: 1234
+                  issue_id: '5460'
+                  issue_key: TEST-5460
+                  ticket_id: 5000
+                  updated_at: '2017-01-01T09:30:00Z'
+                  url: https://subdomain.zendesk.com/api/services/jira/links/1234
+    delete:
+      tags:
+        - api > services/jira/links > {link_id}
+      summary: Delete Link
+      description: |
+        Removes the given link.
+
+        #### Allowed For
+
+        * Admins
+      parameters:
+        - name: link_id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: (Required) The id of the link
+          example: <integer>
+      responses:
+        '204':
+          description: No Content
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: text/plain
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: ''
+  /api/services/jira/links:
+    get:
+      tags:
+        - api > services/jira/links
+      summary: List Links (deprecated)
+      description: >
+        **Note**: This endpoint is deprecated. Use the [List Links](#list-links)
+        endpoint (`GET /api/v2/jira/links`) instead.
+
+
+        Lists the links for the current account, ordered by id.
+
+
+        #### Pagination
+
+
+        By default, this endpoint retrieves 1000 links per page. You can walk
+        through
+
+        the available links and customize the page size with a combination of
+        the
+
+        `since_id` and `limit` parameters.
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: since_id
+          in: query
+          schema:
+            type: string
+          description: The start id of the collection
+          example: <integer>
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: The number of entries that will be returned
+          example: '1000'
+        - name: ticket_id
+          in: query
+          schema:
+            type: string
+          description: >
+            List links for a specific Zendesk Ticket or Jira issue by providing
+            `ticket_id`
+
+            and/or `issue_id` param. We currently do not support `issue_key`
+            param.
+          example: <integer>
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                links:
+                  - created_at: '2017-01-01T09:30:00Z'
+                    id: 1234
+                    issue_id: '5460'
+                    issue_key: TEST-5460
+                    ticket_id: 5000
+                    updated_at: '2017-01-01T09:30:00Z'
+    post:
+      tags:
+        - api > services/jira/links
+      summary: Create Link
+      description: |
+        Creates a link.
+
+        #### Allowed For
+
+        * Admins
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                link:
+                  issue_id: <string>
+                  issue_key: <string>
+                  ticket_id: <integer>
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '201':
+          description: Created
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                link:
+                  created_at: '2017-01-01T09:30:00Z'
+                  id: 1234
+                  issue_id: '5460'
+                  issue_key: TEST-5460
+                  ticket_id: 5000
+                  updated_at: '2017-01-01T09:30:00Z'
+                  url: https://subdomain.zendesk.com/api/services/jira/links/1234
+  /api/v2/jira/links:
+    get:
+      tags:
+        - api
+      summary: List Links
+      description: >
+        Lists the links for the current account, ordered by id.
+
+
+        #### Allowed For
+
+
+        * Admins
+
+
+        #### Pagination
+
+
+        By default, this endpoint retrieves 1000 links per page. You can
+        paginate through
+
+        the available links and customize the page size with a combination of
+        the
+
+        `page[after]` and `page[size]` parameters.
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: page[after]
+          in: query
+          schema:
+            type: string
+          description: >-
+            When provided, the returned paginated data must have as its first
+            item the item that is immediately after the cursor in the results
+            list. Exception: If there are no items in the results list that fall
+            after the cursor, the returned paginated data must be an empty array
+          example: <integer>
+        - name: page[size]
+          in: query
+          schema:
+            type: integer
+          description: The number of entries that will be returned
+          example: '1000'
+        - name: filter[ticket_id]
+          in: query
+          schema:
+            type: string
+          description: >
+            List links for a specific Zendesk ticket or Jira issue by specifying
+            a ticket id
+
+            or issue id. Filtering by issue key is not currently supported
+          example: <integer>
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                links:
+                  - created_at: '2017-01-01T09:30:00Z'
+                    id: 1234
+                    issue_id: '5460'
+                    issue_key: TEST-5460
+                    ticket_id: 5000
+                    updated_at: '2017-01-01T09:30:00Z'
+                meta:
+                  after_cursor: >-
+                    https://{subdomain}.zendesk.com/api/v2/jira/links?page[after]=5000
+                  has_more: true
