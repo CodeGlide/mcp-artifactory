@@ -1,0 +1,3337 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "payroll",
+    "description": "The Payroll service enables you to access and manage payroll information, such as pay groups, payroll inputs, and tax rates.",
+    "version": "v2",
+    "x-workday-internal-source": "xo",
+    "x-workday-internal-routing": "Public",
+    "x-workday-internal-protected-usage-enabled": false,
+    "x-workday-internal-service-container-id": "c29c6c7c3b4f1000140477e143b40013"
+  },
+  "servers": [
+    {
+      "url": "https://<tenantHostname>/payroll/v2"
+    }
+  ],
+  "tags": [
+    {
+      "name": "jobs"
+    },
+    {
+      "name": "payGroupDetails",
+      "description": "Provides the ability to view pay group details. Inactive and External Pay Group Details are not supported."
+    },
+    {
+      "name": "payGroups",
+      "description": "Provides the ability to view pay groups. Inactive and External Pay Groups are not supported."
+    },
+    {
+      "name": "payrollInputs",
+      "description": "Provides the ability to get, add, update, and delete payroll inputs for workers and pay components. These REST APIs: \n\n* Are secured to the Worker Data: Payroll Public API (Payroll Input) and Self-Service: Payroll Public API (Payroll Input) security domains. \n\n* The POST, PATCH, DELETE methods for self-service users require Pay Component Security Segments. Self-service users can view their own Payroll Inputs using GET without a Pay Component Security Segment. \n\n* Pay Component Segment Security is only supported on the Self-Service: Payroll Public API (Payroll Input) security domain. The Segment-Based Security Group must use a <b>Self-Service – Worker</b> security group type as the basis. \n\n* Don't support Payroll Tax Location Mapping or Pay Components that require Special Entry."
+    },
+    {
+      "name": "taxRates",
+      "description": "Use these REST APIs to access company SUI tax rates."
+    },
+    {
+      "name": "Prompt Values",
+      "description": "Retrieves instances that can be used as values for other endpoint parameters in this service."
+    }
+  ],
+  "paths": {
+    "/jobs/{ID}/payGroup/{subresourceID}": {
+      "get": {
+        "tags": [
+          "jobs"
+        ],
+        "summary": "Retrieves a single pay group instance.",
+        "description": "Retrieves a pay group instance with the specified ID.\n\n<b>Secured by:</b> Set Up: Payroll - Pay Group Specific\n\n<b>Scope:</b> Core Payroll",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "The Workday ID of the resource.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subresourceID",
+            "in": "path",
+            "description": "The Workday ID of the subresource.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/payGroupView_a35ef5a5cdfe1000117cd514daa600f3"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-try-enabled": "true"
+      }
+    },
+    "/payGroups/{ID}": {
+      "get": {
+        "tags": [
+          "payGroups"
+        ],
+        "summary": "Retrieves a single pay group instance.",
+        "description": "Retrieves a pay group with the specified ID.\n\n<b>Secured by:</b> Set Up: Payroll - Pay Group Specific\n\n<b>Scope:</b> Core Payroll",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "The Workday ID of the resource.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/payGroupView_a35ef5a5cdfe1000117cd514daa600f3"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-try-enabled": "true"
+      }
+    },
+    "/jobs/{ID}/payGroup": {
+      "get": {
+        "tags": [
+          "jobs"
+        ],
+        "summary": "Retrieves the pay group for a specified job ID. This method always returns 1 pay group.",
+        "description": "Retrieves the pay group for a specified job ID.\n\n<b>Secured by:</b> Set Up: Payroll - Pay Group Specific\n\n<b>Scope:</b> Core Payroll",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "The Workday ID of the resource.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "effective",
+            "in": "query",
+            "description": "The effective date of the pay group, using the date format yyyy-mm-dd.",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The maximum number of objects in a single response. The default is 20. The maximum is 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The zero-based index of the first object in a response collection. The default is 0. Use offset with the limit parameter to control paging of a response collection. Example: If limit is 5 and offset is 9, the response returns a collection of 5 objects starting with the 10th object.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/payGroupView_a35ef5a5cdfe1000117cd514daa600f3"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-try-enabled": "true"
+      }
+    },
+    "/values/taxRatesGroup/companyInstances/": {
+      "get": {
+        "tags": [
+          "Prompt Values"
+        ],
+        "description": "Retrieves instances that can be used as values for other endpoint parameters in this service.",
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MULTIPLE_INSTANCE_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-protected-usage-enabled": false,
+        "x-workday-internal-try-enabled": "false"
+      },
+      "parameters": [
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "The maximum number of objects in a single response. The default and maximum is 1000.",
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "description": "The zero-based index of the first object in a response collection. The default is 0. Use offset with the limit parameter to control paging of a response collection. Example: If limit is 5 and offset is 9, the response returns a collection of 5 objects starting with the 10th object.",
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      ]
+    },
+    "/values/payrollInputsGroup/worktags/": {
+      "get": {
+        "tags": [
+          "Prompt Values"
+        ],
+        "description": "Retrieves instances that can be used as values for other endpoint parameters in this service.",
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MULTIPLE_INSTANCE_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-protected-usage-enabled": false,
+        "x-workday-internal-try-enabled": "false"
+      },
+      "parameters": [
+        {
+          "name": "endDate",
+          "in": "query",
+          "description": "The end date for the positions, using the date format yyyy-mm-dd.",
+          "schema": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "The maximum number of objects in a single response. The default and maximum is 1000.",
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "description": "The zero-based index of the first object in a response collection. The default is 0. Use offset with the limit parameter to control paging of a response collection. Example: If limit is 5 and offset is 9, the response returns a collection of 5 objects starting with the 10th object.",
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        {
+          "name": "payComponent",
+          "in": "query",
+          "description": "The pay component for the worktags. You can use a returned id from GET/values/payrollInputsGroup/payComponents.",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "startDate",
+          "in": "query",
+          "description": "The start date for the positions, using the date format yyyy-mm-dd.",
+          "schema": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        {
+          "name": "worker",
+          "in": "query",
+          "description": "The Workday ID of the worker. You can use a returned id from GET /workers in the Staffing service.",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/payGroupDetails/{ID}": {
+      "get": {
+        "tags": [
+          "payGroupDetails"
+        ],
+        "summary": "Retrieves a single pay group detail instance.",
+        "description": "Retrieves a pay group detail with the specified ID.\n\n<b>Secured by:</b> Set Up: Payroll - Pay Group Specific\n\n<b>Scope:</b> Core Payroll",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "The Workday ID of the resource.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/payGroupDetailView_e5811059356910001433d1f0fa2e2256"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-try-enabled": "true"
+      }
+    },
+    "/jobs": {
+      "get": {
+        "tags": [
+          "jobs"
+        ],
+        "summary": "Retrieves a collection of jobs.",
+        "description": "Retrieves a collection of jobs.\n\n<b>Secured by:</b> Worker Position: View\n\n<b>Scope:</b> Staffing",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The maximum number of objects in a single response. The default is 20. The maximum is 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The zero-based index of the first object in a response collection. The default is 0. Use offset with the limit parameter to control paging of a response collection. Example: If limit is 5 and offset is 9, the response returns a collection of 5 objects starting with the 10th object.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/jobData_1bfa8925c50510000ae4479925510026"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-try-enabled": "true"
+      }
+    },
+    "/values/payrollInputsGroup/runCategories/": {
+      "get": {
+        "tags": [
+          "Prompt Values"
+        ],
+        "description": "Retrieves instances that can be used as values for other endpoint parameters in this service.",
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MULTIPLE_INSTANCE_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-protected-usage-enabled": false,
+        "x-workday-internal-try-enabled": "false"
+      },
+      "parameters": [
+        {
+          "name": "endDate",
+          "in": "query",
+          "description": "The end date for the positions, using the date format yyyy-mm-dd.",
+          "schema": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "The maximum number of objects in a single response. The default and maximum is 1000.",
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "description": "The zero-based index of the first object in a response collection. The default is 0. Use offset with the limit parameter to control paging of a response collection. Example: If limit is 5 and offset is 9, the response returns a collection of 5 objects starting with the 10th object.",
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        {
+          "name": "payComponent",
+          "in": "query",
+          "description": "The pay component for the worktags. You can use a returned id from GET/values/payrollInputsGroup/payComponents.",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "startDate",
+          "in": "query",
+          "description": "The start date for the positions, using the date format yyyy-mm-dd.",
+          "schema": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        {
+          "name": "worker",
+          "in": "query",
+          "description": "The Workday ID of the worker. You can use a returned id from GET /workers in the Staffing service.",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/payGroupDetails": {
+      "get": {
+        "tags": [
+          "payGroupDetails"
+        ],
+        "summary": "Retrieves a collection of pay group details.",
+        "description": "Retrieves all pay group details. Inactive and External Pay Group Details are not supported.\n\n<b>Secured by:</b> Set Up: Payroll - Pay Group Specific\n\n<b>Scope:</b> Core Payroll",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The maximum number of objects in a single response. The default is 20. The maximum is 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The zero-based index of the first object in a response collection. The default is 0. Use offset with the limit parameter to control paging of a response collection. Example: If limit is 5 and offset is 9, the response returns a collection of 5 objects starting with the 10th object.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "runCategories",
+            "in": "query",
+            "description": "One or more Workday IDs of run categories for the pay group. You can use returned ids from GET /values/payrollInputsGroup/runCategories.You can specify 1 or more runCategories query parameters, example: runCategories=category1&runCategories=category2",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/payGroupDetailView_e5811059356910001433d1f0fa2e2256"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-try-enabled": "true"
+      }
+    },
+    "/jobs/{ID}": {
+      "get": {
+        "tags": [
+          "jobs"
+        ],
+        "summary": "Retrieves a single job instance.",
+        "description": "Retrieves a job with the specified job ID.\n\n<b>Secured by:</b> Worker Position: View\n\n<b>Scope:</b> Staffing",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "The Workday ID of the resource.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/jobData_1bfa8925c50510000ae4479925510026"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-try-enabled": "true"
+      }
+    },
+    "/values/payrollInputsGroup/positions/": {
+      "get": {
+        "tags": [
+          "Prompt Values"
+        ],
+        "description": "Retrieves instances that can be used as values for other endpoint parameters in this service.",
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MULTIPLE_INSTANCE_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-protected-usage-enabled": false,
+        "x-workday-internal-try-enabled": "false"
+      },
+      "parameters": [
+        {
+          "name": "endDate",
+          "in": "query",
+          "description": "The end date for the positions, using the date format yyyy-mm-dd.",
+          "schema": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "The maximum number of objects in a single response. The default and maximum is 1000.",
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "description": "The zero-based index of the first object in a response collection. The default is 0. Use offset with the limit parameter to control paging of a response collection. Example: If limit is 5 and offset is 9, the response returns a collection of 5 objects starting with the 10th object.",
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        {
+          "name": "payComponent",
+          "in": "query",
+          "description": "The pay component for the worktags. You can use a returned id from GET/values/payrollInputsGroup/payComponents.",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "startDate",
+          "in": "query",
+          "description": "The start date for the positions, using the date format yyyy-mm-dd.",
+          "schema": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        {
+          "name": "worker",
+          "in": "query",
+          "description": "The Workday ID of the worker. You can use a returned id from GET /workers in the Staffing service.",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/payrollInputs/{ID}": {
+      "get": {
+        "tags": [
+          "payrollInputs"
+        ],
+        "summary": "Retrieves a single payroll input instance.",
+        "description": "Retrieves a payroll input with the specified ID.\n\n<b>Secured by:</b> Self-Service: Payroll Public API (Payroll Input), Worker Data: Payroll Public API (Payroll Input)\n\n<b>Scope:</b> Core Payroll",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "The Workday ID of the resource.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/payrollInputView_dc697bd5bc1b100005f3109b925b00f6"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)\nError Code | Validation Message\n--- | ---\nA98 | Specify only 1 Worktag for each worktag type.\nA116 | Specify these payroll worktag types for [pc]: [worktags].\nA119 | Specify an End Date that is on or after the Start Date.\nA120 | Enable Input Amount Allowed on [pc].\nA137 | Specify valid run categories. Invalid run categories are: [runcats]\nA138 | Specify a Position that's valid for [worker].\nA139 | Specify worktags valid for payroll. Invalid worktags are: [worktags].\nA141 | Specify only 1 Input Details row for each input Type.\nA142 | Enable Input Allowed on [pc] - [pcrc].\nA548 | Specify a Pay Component configured with the correct Worker country.\nA550 | Specify a Type for each Input Details row.\nA551 | Specify a Related Calculation that's valid for [pc].\nA552 | Specify a Start Date.\nA555 | Specify a Pay Component.\nA559 | Specify an End Date for One-time Payroll Input.\nA560 | Specify a position for [pc].\nA940 | Specify a valid level 1 project plan phase. This phase isn't supported: [phase]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-try-enabled": "false"
+      },
+      "delete": {
+        "tags": [
+          "payrollInputs"
+        ],
+        "summary": "Deletes an existing payroll input instance.",
+        "description": "Deletes an existing payroll input instance with the specified ID. \n\nThe Pay Component Segment Security configuration is required. Note that Pay Component Segment Security is supported only on the Self-Service: Payroll Public API (Payroll Input) security domain. The Segment-Based Security Group must use a <b>Self-Service – Worker</b> security group type as the basis.\n\n<b>Secured by:</b> Self-Service: Payroll Public API (Payroll Input), Worker Data: Payroll Public API (Payroll Input)\n\n<b>Scope:</b> Core Payroll",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "The Workday ID of the resource.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data. Deleting resource.",
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)\nError Code | Validation Message\n--- | ---\nA98 | Specify only 1 Worktag for each worktag type.\nA116 | Specify these payroll worktag types for [pc]: [worktags].\nA119 | Specify an End Date that is on or after the Start Date.\nA120 | Enable Input Amount Allowed on [pc].\nA137 | Specify valid run categories. Invalid run categories are: [runcats]\nA138 | Specify a Position that's valid for [worker].\nA139 | Specify worktags valid for payroll. Invalid worktags are: [worktags].\nA140 | You can't delete this input. It's used in an on-cycle result of a locked pay group or a completed pay result.\nA141 | Specify only 1 Input Details row for each input Type.\nA142 | Enable Input Allowed on [pc] - [pcrc].\nA548 | Specify a Pay Component configured with the correct Worker country.\nA550 | Specify a Type for each Input Details row.\nA551 | Specify a Related Calculation that's valid for [pc].\nA552 | Specify a Start Date.\nA554 | You can't delete a payroll input that's used in an off-cycle payment.\nA555 | Specify a Pay Component.\nA556 | You can't delete an external payroll input.\nA558 | You can't delete a payroll input that's used in a completed or suspended retro result.\nA559 | Specify an End Date for One-time Payroll Input.\nA560 | Specify a position for [pc].\nA561 | [pc] isn't configured for self-service. You can't delete your own payroll input.\nA940 | Specify a valid level 1 project plan phase. This phase isn't supported: [phase]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-try-enabled": "false"
+      },
+      "patch": {
+        "tags": [
+          "payrollInputs"
+        ],
+        "summary": "Partially updates an existing payroll input instance.",
+        "description": "Partially updates an existing payroll input instance with the specified ID and the specified data in the request body. Before calling this PATCH method, call the GET /payrollInputs method to retrieve the current payroll input information.\n\nYou cannot update the worker field with this PATCH method.   \n\nThe Pay Component Segment Security configuration is required. Note that Pay Component Segment Security is supported only on the Self-Service: Payroll Public API (Payroll Input) security domain. The Segment-Based Security Group must use a <b>Self-Service – Worker</b> security group type as the basis.\n\n**Starting in v2:**\nThe fieldEditability field in the GET /payrollInputs/{ID} response determines the fields that you can update with the PATCH /payrollInputs method. Possible fieldEditability values:  \n\n* all - All fields can be updated, except the worker field.   \n\n* none - No fields can be updated.   \n\n* endDateOnly - Only the endDate field can be updated.   \n\n** In v1: **\n\nThe lastPeriodCompleted and usedInCompletedResult fields in the GET /payrollInputs/{ID} response determine the fields you can update with this PATCH method:  \n\n* If lastPeriodCompleted and usedInCompletedResult are both false, all fields can be updated, except the worker field.  \n\n* If lastPeriodCompleted and usedInCompletedResult are both true, no fields can be updated.  \n\n* If only usedInCompletedResult is true, only the endDate field can be updated.\n\n<b>Secured by:</b> Self-Service: Payroll Public API (Payroll Input), Worker Data: Payroll Public API (Payroll Input)\n\n<b>Scope:</b> Core Payroll",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "description": "The Workday ID of the resource.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/payrollInputView_dc697bd5bc1b100005f3109b925b00f6"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data. Updating resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/payrollInputView_dc697bd5bc1b100005f3109b925b00f6"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)\nError Code | Validation Message\n--- | ---\nA13 | You can't include the worker.\nA98 | Specify only 1 Worktag for each worktag type.\nA116 | Specify these payroll worktag types for [pc]: [worktags].\nA119 | Specify an End Date that is on or after the Start Date.\nA120 | Enable Input Amount Allowed on [pc].\nA121 | Enter a date that's latest between the completed pay period end date and the locked result period end date for the appropriate run category.\nA137 | Specify valid run categories. Invalid run categories are: [runcats]\nA138 | Specify a Position that's valid for [worker].\nA139 | Specify worktags valid for payroll. Invalid worktags are: [worktags].\nA140 | You can't edit any fields on this input. It's used in an on-cycle result of a locked pay group, a completed pay result, or a retro result.\nA141 | Specify only 1 Input Details row for each input Type.\nA142 | Enable Input Allowed on [pc] - [pcrc].\nA548 | Specify a Pay Component configured with the correct Worker country.\nA550 | Specify a Type for each Input Details row.\nA551 | Specify a Related Calculation that's valid for [pc].\nA552 | Specify a Start Date.\nA553 | You can edit only the end date. This pay input is used in an on-cycle result of a locked pay group or a completed pay result.\nA554 | You can't update a payroll input that's used in an off-cycle payment.\nA555 | Specify a Pay Component.\nA556 | You can't update an external payroll input.\nA557 | You can't edit any fields on this input. It's used in an on-cycle result of a locked pay group, a completed pay result, or a retro result.\nA559 | Specify an End Date for One-time Payroll Input.\nA560 | Specify a position for [pc].\nA561 | [pc] isn't configured for self-service. You can't update your own payroll input.\nA940 | Specify a valid level 1 project plan phase. This phase isn't supported: [phase]\nA994 | You can only update this payroll input with the payroll input lines that are associated with it. Change these payroll input lines: [input line IDs]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-try-enabled": "false",
+        "x-codegen-request-body-name": "payrollInputView"
+      }
+    },
+    "/payrollInputs": {
+      "get": {
+        "tags": [
+          "payrollInputs"
+        ],
+        "summary": "Retrieves a collection of payroll inputs. At least 1 query parameter is required to get data.",
+        "description": "Retrieves all payroll inputs. At least 1 query parameter is required to get data. \n\nThe Pay Component Segment Security configuration doesn't apply to the GET method. Self-service users can view all of their own Payroll Inputs.\n\n**Starting in v2:**\nThe fieldEditability field in the GET /payrollInputs/{ID} response determines the fields that you can update with the PATCH /payrollInputs method. Possible fieldEditability values:  \n\n* all - All fields can be updated, except the worker field.   \n\n* none - No fields can be updated.   \n\n* endDateOnly - Only the endDate field can be updated.   \n\n** In v1: **\nThe lastPeriodCompleted and usedInCompletedResult fields in the GET /payrollInputs/{ID} response determine the fields that you can update with the PATCH /payrollInputs method.   \n\n* If lastPeriodCompleted and usedInCompletedResult are both false, all fields can be updated, except the worker field.   \n\n* If lastPeriodCompleted and usedInCompletedResult are both true, no fields can be updated.   \n\n* If only usedInCompletedResult is true, only the endDate field can be updated.\n\n<b>Secured by:</b> Self-Service: Payroll Public API (Payroll Input), Worker Data: Payroll Public API (Payroll Input)\n\n<b>Scope:</b> Core Payroll",
+        "parameters": [
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "The end date filter which returns payroll inputs that are active on or before the end date, using the date format yyyy-mm-dd.",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The maximum number of objects in a single response. The default is 20. The maximum is 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The zero-based index of the first object in a response collection. The default is 0. Use offset with the limit parameter to control paging of a response collection. Example: If limit is 5 and offset is 9, the response returns a collection of 5 objects starting with the 10th object.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "payComponent",
+            "in": "query",
+            "description": "The Workday ID of the pay component for the payroll input. You can use a returned id from GET /values/payrollInputsGroup/payComponents.",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "The start date filter which returns payroll inputs that are active on or after the start date, using the date format yyyy-mm-dd.",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "worker",
+            "in": "query",
+            "description": "The Workday ID of worker for the payroll input. You can use a returned id from GET /workers in the Staffing service.",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/payrollInputView_dc697bd5bc1b100005f3109b925b00f6"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)\nError Code | Validation Message\n--- | ---\nA98 | Specify only 1 Worktag for each worktag type.\nA116 | Specify these payroll worktag types for [pc]: [worktags].\nA119 | Specify an End Date that is on or after the Start Date.\nA120 | Enable Input Amount Allowed on [pc].\nA137 | Specify valid run categories. Invalid run categories are: [runcats]\nA138 | Specify a Position that's valid for [worker].\nA139 | Specify worktags valid for payroll. Invalid worktags are: [worktags].\nA141 | Specify only 1 Input Details row for each input Type.\nA142 | Enable Input Allowed on [pc] - [pcrc].\nA548 | Specify a Pay Component configured with the correct Worker country.\nA550 | Specify a Type for each Input Details row.\nA551 | Specify a Related Calculation that's valid for [pc].\nA552 | Specify a Start Date.\nA555 | Specify a Pay Component.\nA559 | Specify an End Date for One-time Payroll Input.\nA560 | Specify a position for [pc].\nA940 | Specify a valid level 1 project plan phase. This phase isn't supported: [phase]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-try-enabled": "false"
+      },
+      "post": {
+        "tags": [
+          "payrollInputs"
+        ],
+        "summary": "Creates payroll inputs.",
+        "description": "Creates a single payroll input instance with the specified data. In the request body, specify at least these required fields: worker, payComponent and startDate.\n\n* If you specified a position-based payComponent, then the position field is required.   \n\n* If a worktag applies to the payComponent, provide a valid worktag.  \n\n* If ongoing is false, then an endDate is required for a one-time payroll input.   \n\n* If you specified inputDetails, then the type field is required.   \n\nThe Pay Component Segment Security configuration is required. Note that Pay Component Segment Security is supported only on the Self-Service: Payroll Public API (Payroll Input) security domain. The Segment-Based Security Group must use a <b>Self-Service – Worker</b> security group type as the basis.\n\n<b>Secured by:</b> Self-Service: Payroll Public API (Payroll Input), Worker Data: Payroll Public API (Payroll Input)\n\n<b>Scope:</b> Core Payroll",
+        "requestBody": {
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/payrollInputView_dc697bd5bc1b100005f3109b925b00f6"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Resource created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/payrollInputView_dc697bd5bc1b100005f3109b925b00f6"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)\nError Code | Validation Message\n--- | ---\nA98 | Specify only 1 Worktag for each worktag type.\nA116 | Specify these payroll worktag types for [pc]: [worktags].\nA119 | Specify an End Date that is on or after the Start Date.\nA120 | Enable Input Amount Allowed on [pc].\nA137 | Specify valid run categories. Invalid run categories are: [runcats]\nA138 | Specify a Position that's valid for [worker].\nA139 | Specify worktags valid for payroll. Invalid worktags are: [worktags].\nA141 | Specify only 1 Input Details row for each input Type.\nA142 | Enable Input Allowed on [pc] - [pcrc].\nA548 | Specify a Pay Component configured with the correct Worker country.\nA549 | Specify a Worker.\nA550 | Specify a Type for each Input Details row.\nA551 | Specify a Related Calculation that's valid for [pc].\nA552 | Specify a Start Date.\nA555 | Specify a Pay Component.\nA559 | Specify an End Date for One-time Payroll Input.\nA560 | Specify a position for [pc].\nA940 | Specify a valid level 1 project plan phase. This phase isn't supported: [phase]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-try-enabled": "false",
+        "x-codegen-request-body-name": "payrollInputView"
+      }
+    },
+    "/values/taxRatesGroup/stateInstances/": {
+      "get": {
+        "tags": [
+          "Prompt Values"
+        ],
+        "description": "Retrieves instances that can be used as values for other endpoint parameters in this service.",
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MULTIPLE_INSTANCE_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-protected-usage-enabled": false,
+        "x-workday-internal-try-enabled": "false"
+      },
+      "parameters": [
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "The maximum number of objects in a single response. The default and maximum is 1000.",
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "description": "The zero-based index of the first object in a response collection. The default is 0. Use offset with the limit parameter to control paging of a response collection. Example: If limit is 5 and offset is 9, the response returns a collection of 5 objects starting with the 10th object.",
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      ]
+    },
+    "/taxRates": {
+      "get": {
+        "tags": [
+          "taxRates"
+        ],
+        "summary": "Retrieves a single or a collection of company SUI rates.",
+        "description": "Retrieves all company SUI rates. You can filter the company SUI rates by company, payroll state authority tax code, or effective date.\n\n<b>Secured by:</b> Process: Tax Filing/W-2s (Run) - USA\n\n<b>Scope:</b> USA Payroll",
+        "parameters": [
+          {
+            "name": "company",
+            "in": "query",
+            "description": "The company reference ID or WID that represents 1 or more companies. Example: company=comp1&company=comp2&company=cb550da820584750aae8f807882fa79a",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "effective",
+            "in": "query",
+            "description": "The effective date for the SUI rate, using the yyyy-mm-dd format.",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The maximum number of objects in a single response. The default is 20. The maximum is 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The zero-based index of the first object in a response collection. The default is 0. Use offset with the limit parameter to control paging of a response collection. Example: If limit is 5 and offset is 9, the response returns a collection of 5 objects starting with the 10th object.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "payrollStateAuthorityTaxCode",
+            "in": "query",
+            "description": "The FIPS code or WID that represents 1 or more states. Example: payrollStateAuthorityTaxCode=06&payrollStateAuthorityTaxCode=3b3d378d5f4a48b8b3ac46fee0703226&payrollStateAuthorityTaxCode=48",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/suiRatesSummary_b2c5e6f505c3100018bb11b51393015b"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-try-enabled": "true"
+      },
+      "post": {
+        "tags": [
+          "taxRates"
+        ],
+        "summary": "Creates a single or a collection of Company SUI Rates.",
+        "description": "Creates a single or a collection of company SUI rates. To create a single company SUI rate, specify the single JSON object in the request body.\nTo create multiple company SUI rates, specify \"bulk=true\" as a query parameter. You must specify the JSON object collection in data[ ] in the request body. The maximum collection size is 100. \nIn the request body, specify at least these required fields: companyInstance, stateInstance, taxCode, startDate.\n\n<b>Secured by:</b> Process: Tax Filing/W-2s (Run) - USA\n\n<b>Scope:</b> USA Payroll",
+        "requestBody": {
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/companySuiRateDetails_985b8306e95d100002daf466c84d0005"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Resource created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/companySuiRateDetails_985b8306e95d100002daf466c84d0005"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)\nError Code | Validation Message\n--- | ---\nA5 | Enter a U.S. State that's not Guam. Request Element Values - Company: [company] ([companyWID]), State: [state] ([stateWID]), Start Date: ([start])\nA5 | Enter a U.S. company with a U.S. Tax ID. Request Element Values - Company: [company] ([companyWID]), State: [state] ([stateWID]), Start Date: ([start])\nA12 | Enter an Applicable Rate that's less than 10, contains up to 6 decimal places, and is a positive number. Example: 9.999999. Request Element Values - Company: [company] ([companyWID]), State: [state] ([stateWID]), Start Date: ([start])\nA12 | Enter an Employer Identification Number that's valid, and isn't null or 'null'. Request Element Values - Company: [company] ([companyWID]), State: [state] ([stateWID]), Start Date: ([start])\nA12 | You must enter exactly 'W_SUIER' as the taxCode. Request Element Values - Company: [company] ([companyWID]), State: [state] ([stateWID]), Start Date: ([start])\nA119 | Enter an End Date that's after or on the Start Date. Request Element Values - Company: [company] ([companyWID]), State: [state] ([stateWID]), Start Date: ([start])\nA121 | Enter an End Date that's not between the start and end dates of another row. Request Element Values - Company: [company] ([companyWID]), State: [state] ([stateWID]), Start Date: ([start])\nA124 | Enter a Start Date that's not between the start and end dates of an existing row. Request Element Values - Company: [company] ([companyWID]), State: [state] ([stateWID]), Start Date: ([start])",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-try-enabled": "false",
+        "x-codegen-request-body-name": "companySuiRateDetails"
+      }
+    },
+    "/values/payrollInputsGroup/payComponents/": {
+      "get": {
+        "tags": [
+          "Prompt Values"
+        ],
+        "description": "Retrieves instances that can be used as values for other endpoint parameters in this service.",
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MULTIPLE_INSTANCE_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-protected-usage-enabled": false,
+        "x-workday-internal-try-enabled": "false"
+      },
+      "parameters": [
+        {
+          "name": "endDate",
+          "in": "query",
+          "description": "The end date for the positions, using the date format yyyy-mm-dd.",
+          "schema": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "The maximum number of objects in a single response. The default and maximum is 1000.",
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "description": "The zero-based index of the first object in a response collection. The default is 0. Use offset with the limit parameter to control paging of a response collection. Example: If limit is 5 and offset is 9, the response returns a collection of 5 objects starting with the 10th object.",
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        {
+          "name": "payComponent",
+          "in": "query",
+          "description": "The pay component for the worktags. You can use a returned id from GET/values/payrollInputsGroup/payComponents.",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "startDate",
+          "in": "query",
+          "description": "The start date for the positions, using the date format yyyy-mm-dd.",
+          "schema": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        {
+          "name": "worker",
+          "in": "query",
+          "description": "The Workday ID of the worker. You can use a returned id from GET /workers in the Staffing service.",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/payGroups": {
+      "get": {
+        "tags": [
+          "payGroups"
+        ],
+        "summary": "Retrieves a collection of pay groups.",
+        "description": "Retrieves all pay groups. Inactive and External Pay Groups are not supported.\n\n<b>Secured by:</b> Set Up: Payroll - Pay Group Specific\n\n<b>Scope:</b> Core Payroll",
+        "parameters": [
+          {
+            "name": "country",
+            "in": "query",
+            "description": "The Workday ID of the country or territory of the pay group. You can use a returned country id from any of the payGroups endpoints in this Payroll API.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The maximum number of objects in a single response. The default is 20. The maximum is 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The zero-based index of the first object in a response collection. The default is 0. Use offset with the limit parameter to control paging of a response collection. Example: If limit is 5 and offset is 9, the response returns a collection of 5 objects starting with the 10th object.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response. A successful response can return no matched data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/payGroupView_a35ef5a5cdfe1000117cd514daa600f3"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid resource or operation. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User has insufficient permissions. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. (https://community.workday.com/rest/error-messages)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VALIDATION_ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error occurred.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        },
+        "x-workday-internal-try-enabled": "true"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "INSTANCE_MODEL_REFERENCE": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "pattern": "^(?:(?:[0-9a-f]{32})|(?:[0-9]+\\$[0-9]+)|(\\S+=\\S+))$",
+            "type": "string",
+            "description": "wid / id / reference id"
+          },
+          "descriptor": {
+            "type": "string",
+            "description": "A description of the instance",
+            "readOnly": true
+          },
+          "href": {
+            "type": "string",
+            "description": "A link to the instance",
+            "readOnly": true
+          }
+        }
+      },
+      "ERROR_MODEL_REFERENCE": {
+        "required": [
+          "error"
+        ],
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "A description of the error"
+          },
+          "code": {
+            "type": "string",
+            "description": "The code that corresponds to the error message. Use the error code to drive programmatic error-handling behavior. Don't use error message strings for this purpose because they are subject to change"
+          },
+          "field": {
+            "type": "string",
+            "description": "The field related to the error"
+          },
+          "path": {
+            "type": "string",
+            "description": "The path of the field related to the error"
+          }
+        }
+      },
+      "VALIDATION_ERROR_MODEL_REFERENCE": {
+        "allOf": [
+          {
+            "required": [
+              "error"
+            ],
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string",
+                "description": "A description of the error"
+              },
+              "errors": {
+                "type": "array",
+                "description": "An array of validation errors",
+                "items": {
+                  "$ref": "#/components/schemas/ERROR_MODEL_REFERENCE"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "FACETS_MODEL_REFERENCE": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "descriptor": {
+              "type": "string",
+              "description": "A description of the facet"
+            },
+            "facetParameter": {
+              "type": "string",
+              "description": "The alias used to select the facet"
+            },
+            "values": {
+              "type": "array",
+              "description": "the facet values",
+              "items": {
+                "required": [
+                  "id"
+                ],
+                "type": "object",
+                "properties": {
+                  "count": {
+                    "type": "integer",
+                    "description": "The number of instances returned by this facet",
+                    "format": "int32"
+                  },
+                  "id": {
+                    "pattern": "^(?:(?:[0-9a-f]{32})|(?:[0-9]+\\$[0-9]+)|(\\S+=\\S+))$",
+                    "type": "string",
+                    "description": "wid / id / reference id"
+                  },
+                  "descriptor": {
+                    "type": "string",
+                    "description": "A description of the facet"
+                  },
+                  "href": {
+                    "type": "string",
+                    "description": "A link to the instance",
+                    "readOnly": true
+                  }
+                }
+              }
+            }
+          },
+          "description": "This object represents the possible facets for this resource",
+          "readOnly": true
+        }
+      },
+      "MULTIPLE_INSTANCE_MODEL_REFERENCE": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/INSTANCE_MODEL_REFERENCE"
+            }
+          }
+        }
+      },
+      "payComponent_dc697bd5bc1b100005f310c75c8e00f9": {
+        "description": "The pay component for this payroll input.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/payComponent_d4198c33f48d10000ec87ef21d4700f1"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "currency_dc697bd5bc1b1000085ab3d0e5da0108": {
+        "description": "The currency for the payroll input. If no currency exists, the system assumes the Pay Group currency. The Pay Group currency is derived from the default currency for the Pay Group country.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/INSTANCE_MODEL_REFERENCE"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "position_95417070df52100038a792408e430185": {
+        "description": "The worker's position the payroll input applies to if Multi Job Payroll is used.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/INSTANCE_MODEL_REFERENCE"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "worker_dc697bd5bc1b100005f310b2da6e00f7": {
+        "description": "The worker for this payroll input.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/worker_95417070df5210000dc1bb7f05b8012c"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "payrollInputView_dc697bd5bc1b100005f3109b925b00f6": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "runCategories": {
+                "type": "array",
+                "description": "The run category for the payroll input.",
+                "items": {
+                  "$ref": "#/components/schemas/runCategory_dc697bd5bc1b10001036377098ea0116"
+                },
+                "x-workday-type": "Multi-instance"
+              },
+              "payComponent": {
+                "$ref": "#/components/schemas/payComponent_dc697bd5bc1b100005f310c75c8e00f9"
+              },
+              "comment": {
+                "type": "string",
+                "description": "The text comment for this input.",
+                "example": "Sample Data for Payroll Input",
+                "x-workday-type": "Text"
+              },
+              "startDate": {
+                "type": "string",
+                "description": "The start date before which this input does not apply.",
+                "format": "date",
+                "x-workday-type": "Date"
+              },
+              "currency": {
+                "$ref": "#/components/schemas/currency_dc697bd5bc1b1000085ab3d0e5da0108"
+              },
+              "worktags": {
+                "type": "array",
+                "description": "The worktags associated with the payroll input.",
+                "items": {
+                  "$ref": "#/components/schemas/worktag_dc697bd5bc1b1000105a22eb21b8011b"
+                },
+                "x-workday-type": "Multi-instance"
+              },
+              "inputDetails": {
+                "type": "array",
+                "description": "The details for this payroll input.",
+                "items": {
+                  "$ref": "#/components/schemas/inputLine_dc697bd5bc1b10001050f53a976e0119"
+                },
+                "x-workday-type": "Multi-instance"
+              },
+              "ongoing": {
+                "type": "boolean",
+                "description": "If true, the payroll input is ongoing.",
+                "example": true,
+                "x-workday-type": "Boolean"
+              },
+              "position": {
+                "$ref": "#/components/schemas/position_95417070df52100038a792408e430185"
+              },
+              "fieldEditability": {
+                "type": "string",
+                "description": "The editability status indicating the fields that can be updated in the payroll input request. Possible values: all, none, endDateOnly",
+                "example": "Lorem ipsum dolor sit amet, cum choro singulis consectetuer ut, ubique iisque contentiones ex duo. Quo lorem etiam eu.",
+                "x-workday-type": "Text"
+              },
+              "endDate": {
+                "type": "string",
+                "description": "The end date after which this input does not apply.",
+                "format": "date",
+                "x-workday-type": "Date"
+              },
+              "worker": {
+                "$ref": "#/components/schemas/worker_dc697bd5bc1b100005f310b2da6e00f7"
+              },
+              "adjustment": {
+                "type": "boolean",
+                "description": "If true, the input is for an adjustment as opposed to an override.",
+                "example": true,
+                "x-workday-type": "Boolean"
+              },
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              },
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              }
+            }
+          }
+        ]
+      },
+      "companyInstance_0b4d146f73561000154ef82e7d1300fa": {
+        "description": "The company object for company tax reporting.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/company_c15dfab2b81e100008cee72ff399011e"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "stateInstance_0b4d146f73561000154ef7f3f09900f9": {
+        "description": "The payroll tax authority object for company tax reporting.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/state_c15dfab2b81e10000960777a67000121"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "companySuiRateDetails_985b8306e95d100002daf466c84d0005": {
+        "allOf": [
+          {
+            "required": [
+              "companyInstance",
+              "startDate",
+              "stateInstance",
+              "taxCode"
+            ],
+            "type": "object",
+            "properties": {
+              "companyInstance": {
+                "$ref": "#/components/schemas/companyInstance_0b4d146f73561000154ef82e7d1300fa"
+              },
+              "stateInstance": {
+                "$ref": "#/components/schemas/stateInstance_0b4d146f73561000154ef7f3f09900f9"
+              },
+              "exempt": {
+                "type": "boolean",
+                "description": "If true, the SUI rate is exempt.",
+                "example": true,
+                "x-workday-type": "Boolean"
+              },
+              "startDate": {
+                "type": "string",
+                "description": "The start date for company tax reporting.",
+                "format": "date",
+                "x-workday-type": "Date"
+              },
+              "taxCode": {
+                "maxLength": 20,
+                "type": "string",
+                "description": "The deduction for company tax reporting.",
+                "example": "W_SUIER",
+                "x-workday-type": "Text"
+              },
+              "ein": {
+                "type": "string",
+                "description": "The payroll tax authority EIN field for company tax reporting.",
+                "example": "604-8144-7",
+                "x-workday-type": "Text"
+              },
+              "endDate": {
+                "type": "string",
+                "description": "The end date for company tax reporting.",
+                "format": "date",
+                "x-workday-type": "Date"
+              },
+              "applicableRate": {
+                "type": "string",
+                "description": "The tax override rate for company tax reporting.",
+                "example": "9.9",
+                "x-workday-type": "Text"
+              },
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              }
+            }
+          }
+        ]
+      },
+      "stateInstance_78c55a3bc2cc10000d3989d389220115": {
+        "description": "The state instance which includes the ID, descriptor, and state reference ID.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/state_78c55a3bc2cc10000d85e9bcf66a011d"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "companyInstance_78c55a3bc2cc100009b2cec7cb7e00f7": {
+        "description": "The company instance which includes the ID, descriptor, and company reference ID.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/company_78c55a3bc2cc10000a9d95f9824e00f9"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "suiRatesSummary_b2c5e6f505c3100018bb11b51393015b": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for company SUI rate.",
+                "example": "d79877b2537d017d2961438c11005003",
+                "x-workday-type": "Text"
+              },
+              "ein": {
+                "type": "string",
+                "description": "The EIN value for the company SUI rate.",
+                "example": "604-8144-7",
+                "x-workday-type": "Text"
+              },
+              "startDate": {
+                "type": "string",
+                "description": "The start date value of the row for company SUI rate.",
+                "format": "date",
+                "x-workday-type": "Date"
+              },
+              "exempt": {
+                "type": "boolean",
+                "description": "If true, the SUI rate is exempt.",
+                "example": true,
+                "x-workday-type": "Boolean"
+              },
+              "endDate": {
+                "type": "string",
+                "description": "The end date value of the row for company SUI rate.",
+                "example": "2020-01-01",
+                "x-workday-type": "Text"
+              },
+              "einType": {
+                "type": "string",
+                "description": "The EIN type. Valid values: SUI EIN, STATE EIN, FEIN.",
+                "example": "STATE EIN",
+                "x-workday-type": "Text"
+              },
+              "rateType": {
+                "type": "string",
+                "description": "The rate type. Valid values: OR for override rate, DR for default rate.",
+                "example": "OR",
+                "x-workday-type": "Text"
+              },
+              "taxCode": {
+                "maxLength": 20,
+                "type": "string",
+                "description": "The payroll tax code. As of v1, the default value is W_SUIER.",
+                "example": "W_SUIER",
+                "x-workday-type": "Text"
+              },
+              "applicableRate": {
+                "type": "string",
+                "description": "The applicable rate for the company SUI.",
+                "example": "0.028",
+                "x-workday-type": "Text"
+              },
+              "stateInstance": {
+                "$ref": "#/components/schemas/stateInstance_78c55a3bc2cc10000d3989d389220115"
+              },
+              "companyInstance": {
+                "$ref": "#/components/schemas/companyInstance_78c55a3bc2cc100009b2cec7cb7e00f7"
+              }
+            }
+          }
+        ]
+      },
+      "country_8ae53f6e8b8a100007a313ae869e0d65": {
+        "description": "Contains the country or territory.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/INSTANCE_MODEL_REFERENCE"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "payGroupView_a35ef5a5cdfe1000117cd514daa600f3": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "country": {
+                "$ref": "#/components/schemas/country_8ae53f6e8b8a100007a313ae869e0d65"
+              },
+              "payGroupDetails": {
+                "type": "array",
+                "description": "Contains the pay group detail.",
+                "items": {
+                  "$ref": "#/components/schemas/payGroupDetailMiniView_02313d5912d210000a19cc195ef60105"
+                },
+                "x-workday-type": "Multi-instance"
+              },
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              },
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              }
+            }
+          }
+        ]
+      },
+      "runCategory_ba5ffacfc4e210000bee6ddb72e00116": {
+        "description": "The run category.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/INSTANCE_MODEL_REFERENCE"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "currentPeriodInProgress_ba5ffacfc4e210000c4724393162011e": {
+        "description": "The current period in progress including the period begin date, period end date, and frequency.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/INSTANCE_MODEL_REFERENCE"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "nextPeriodToProcess_ba5ffacfc4e210000c4f57abf59d0120": {
+        "description": "The next period to process, including period begin date, period end date, and frequency.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/INSTANCE_MODEL_REFERENCE"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "firstProcessingPeriod_ba5ffacfc4e210000e3c99501f9f012a": {
+        "description": "The first processing period for the pay group detail.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/INSTANCE_MODEL_REFERENCE"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "lastPeriodCompleted_ba5ffacfc4e210000c384329175c011c": {
+        "description": "The prior period processed including period begin date, period end date, and frequency.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/INSTANCE_MODEL_REFERENCE"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "periodSchedule_ba5ffacfc4e210000bfed14c65fb0118": {
+        "description": "The period schedule for the pay group/run category combination.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/INSTANCE_MODEL_REFERENCE"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "payGroup_ca4f510c6a39100016f4913a34214f4a": {
+        "description": "Name of the pay group organization.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/payGroupSimpleView_ca4f510c6a39100016f0c406e4584f47"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "payGroupDetailView_e5811059356910001433d1f0fa2e2256": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "runCategory": {
+                "$ref": "#/components/schemas/runCategory_ba5ffacfc4e210000bee6ddb72e00116"
+              },
+              "currentPeriodInProgress": {
+                "$ref": "#/components/schemas/currentPeriodInProgress_ba5ffacfc4e210000c4724393162011e"
+              },
+              "nextPeriodToProcess": {
+                "$ref": "#/components/schemas/nextPeriodToProcess_ba5ffacfc4e210000c4f57abf59d0120"
+              },
+              "firstProcessingPeriod": {
+                "$ref": "#/components/schemas/firstProcessingPeriod_ba5ffacfc4e210000e3c99501f9f012a"
+              },
+              "lastPeriodCompleted": {
+                "$ref": "#/components/schemas/lastPeriodCompleted_ba5ffacfc4e210000c384329175c011c"
+              },
+              "periodSchedule": {
+                "$ref": "#/components/schemas/periodSchedule_ba5ffacfc4e210000bfed14c65fb0118"
+              },
+              "payRunGroup": {
+                "type": "array",
+                "description": "Contains one or more pay groups that are processed or run at the same time.",
+                "items": {
+                  "$ref": "#/components/schemas/payRunGroupSimpleView_ba5ffacfc4e210000de956ae16b40122"
+                },
+                "x-workday-type": "Multi-instance"
+              },
+              "payGroup": {
+                "$ref": "#/components/schemas/payGroup_ca4f510c6a39100016f4913a34214f4a"
+              },
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              },
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              }
+            }
+          }
+        ]
+      },
+      "location_6d3eb084b4c410002b617efb943f0059": {
+        "description": "The location associated with the filled position or position restrictions. When associated with position restrictions, the location returned is in this order: the location on the effective job requisition, hiring restrictions, or primary location of the supervisory organization.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/locationDataJobView_6d3eb084b4c410002b5fa13f0c9d0056"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "worker_fab4a151b24810000e66f769304c126b": {
+        "description": "The position management worker filling the position. If the the position is overlapped, return the worker for the overlap position.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/workerJobView_fab4a151b24810000e7ff8d0c7f0126d"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "supervisoryOrganization_fab4a151b24810000d13073c5d341257": {
+        "description": "The supervisory organization for the position.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/supervisoryOrganizationJobView_fab4a151b24810000d29746fb7e21259"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "jobType_b8ac205877fd100005c55b45c6400057": {
+        "description": "The position's job type which can be one of the following values: Primary, Additional Job, or International Assignment. If the position is not effective, no value will be returned. Primary and additional job are effective dated due to the Switch Primary Job business process. An international assignment cannot be switched to a be a primary job.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/jobTypeData_b8ac205877fd100005c3b50b74a30055"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "jobProfile_6fb921f8a11d10001d5268980bbb0097": {
+        "description": "The job profile for the position.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/jobProfileJobView_fab4a151b24810000d511d61ee641262"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "jobData_1bfa8925c50510000ae4479925510026": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "location": {
+                "$ref": "#/components/schemas/location_6d3eb084b4c410002b617efb943f0059"
+              },
+              "businessTitle": {
+                "type": "string",
+                "description": "The business title for the position.",
+                "example": "Sample Business Title",
+                "x-workday-type": "Text"
+              },
+              "worker": {
+                "$ref": "#/components/schemas/worker_fab4a151b24810000e66f769304c126b"
+              },
+              "supervisoryOrganization": {
+                "$ref": "#/components/schemas/supervisoryOrganization_fab4a151b24810000d13073c5d341257"
+              },
+              "nextPayPeriodStartDate": {
+                "type": "string",
+                "description": "The next pay period start date for the job.",
+                "format": "date",
+                "x-workday-type": "Date"
+              },
+              "jobType": {
+                "$ref": "#/components/schemas/jobType_b8ac205877fd100005c55b45c6400057"
+              },
+              "jobProfile": {
+                "$ref": "#/components/schemas/jobProfile_6fb921f8a11d10001d5268980bbb0097"
+              },
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              },
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              }
+            }
+          }
+        ]
+      },
+      "inputInterface_14e354bf8650100010fc3cbd9c520123": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The alternate ID of the related calculation for the pay component and pay component related calculation.",
+                "example": "Lorem ipsum dolor sit amet, cum choro singulis consectetuer ut, ubique iisque contentiones ex duo. Quo lorem etiam eu.",
+                "x-workday-type": "Text"
+              },
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              },
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              }
+            }
+          }
+        ]
+      },
+      "company_c15dfab2b81e100008cee72ff399011e": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              }
+            }
+          }
+        ]
+      },
+      "runCategory_dc697bd5bc1b10001036377098ea0116": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              },
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              }
+            }
+          }
+        ]
+      },
+      "payComponent_d4198c33f48d10000ec87ef21d4700f1": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "code": {
+                "maxLength": 20,
+                "type": "string",
+                "description": "The payroll code of the pay component.",
+                "example": "Lorem ipsum dolor sit amet, cum choro singulis consectetuer ut, ubique iisque contentiones ex duo. Quo lorem etiam eu.",
+                "x-workday-type": "Text"
+              },
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              },
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              }
+            }
+          }
+        ]
+      },
+      "payGroupSimpleView_ca4f510c6a39100016f0c406e4584f47": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              },
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              }
+            }
+          }
+        ]
+      },
+      "state_c15dfab2b81e10000960777a67000121": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              }
+            }
+          }
+        ]
+      },
+      "jobTypeData_b8ac205877fd100005c3b50b74a30055": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              }
+            }
+          }
+        ]
+      },
+      "supervisoryOrganizationJobView_fab4a151b24810000d29746fb7e21259": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              },
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              }
+            }
+          }
+        ]
+      },
+      "company_78c55a3bc2cc10000a9d95f9824e00f9": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "company": {
+                "type": "string",
+                "description": "The Reference ID to use for lookups within our Workday Web Services. For supervisory organizations, this is also the Organization_ID.",
+                "example": "GMS_USA_company",
+                "x-workday-type": "Text"
+              },
+              "fein": {
+                "type": "string",
+                "description": "The FEIN for the US company.",
+                "example": "99-0343105",
+                "x-workday-type": "Text"
+              },
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              },
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              }
+            }
+          }
+        ]
+      },
+      "payRunGroupSimpleView_ba5ffacfc4e210000de956ae16b40122": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              },
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              }
+            }
+          }
+        ]
+      },
+      "state_78c55a3bc2cc10000d85e9bcf66a011d": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "payrollStateAuthorityTaxCode": {
+                "type": "string",
+                "description": "The Payroll Authority Tax Code for a Payroll Tax Authority.",
+                "example": "06",
+                "x-workday-type": "Text"
+              },
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              },
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              }
+            }
+          }
+        ]
+      },
+      "country_af21e47ff7c01000092ecf4d7ad30270": {
+        "description": "Returns the country from the primary address for the location.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/countryDataForLocationData_af21e47ff7c01000092e0e4f9a22026e"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "locationDataJobView_6d3eb084b4c410002b5fa13f0c9d0056": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "country": {
+                "$ref": "#/components/schemas/country_af21e47ff7c01000092ecf4d7ad30270"
+              },
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              },
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              }
+            }
+          }
+        ]
+      },
+      "worker_95417070df5210000dc1bb7f05b8012c": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              },
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              }
+            }
+          }
+        ]
+      },
+      "jobProfileJobView_fab4a151b24810000d511d61ee641262": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              },
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              }
+            }
+          }
+        ]
+      },
+      "runCategory_02313d5912d210000a19cc6245a2010c": {
+        "description": "The run category.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/INSTANCE_MODEL_REFERENCE"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "payGroupDetailMiniView_02313d5912d210000a19cc195ef60105": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "runCategory": {
+                "$ref": "#/components/schemas/runCategory_02313d5912d210000a19cc6245a2010c"
+              },
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              },
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              }
+            }
+          }
+        ]
+      },
+      "countryDataForLocationData_af21e47ff7c01000092e0e4f9a22026e": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              }
+            }
+          }
+        ]
+      },
+      "workerJobView_fab4a151b24810000e7ff8d0c7f0126d": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              },
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              }
+            }
+          }
+        ]
+      },
+      "type_dc697bd5bc1b10001427adc082700133": {
+        "description": "The related calculation type for the input line.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/inputInterface_14e354bf8650100010fc3cbd9c520123"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "inputLine_dc697bd5bc1b10001050f53a976e0119": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "$ref": "#/components/schemas/type_dc697bd5bc1b10001427adc082700133"
+              },
+              "value": {
+                "type": "integer",
+                "description": "The value for the input line.",
+                "x-workday-type": "Numeric"
+              },
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              }
+            }
+          }
+        ]
+      },
+      "worktag_dc697bd5bc1b1000105a22eb21b8011b": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Id of the instance"
+              },
+              "descriptor": {
+                "type": "string",
+                "description": "A preview of the instance",
+                "example": "Lorem ipsum dolor sit ame"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "securitySchemes": {
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://<tenantAuthorizationHostname>",
+            "scopes": {}
+          }
+        }
+      }
+    }
+  },
+  "x-original-swagger-version": "2.0"
+}
