@@ -1,0 +1,39 @@
+name: SquareConnect-CodeGlide MCP generation
+
+on:
+  workflow_dispatch:
+    inputs:
+      input_directory:
+        description: 'Directory containing API source code (relative to workspace)'
+        type: string
+        required: false
+        default: 'Square_Connect_API'
+      create_pr:
+        description: 'Create PR with generated code'
+        type: boolean
+        required: false
+        default: false
+      create_branch_and_commit:
+        description: 'Create branch and commit with generated code'
+        type: boolean
+        required: false
+        default: false
+
+# Add permissions 
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: codeglide MCP generator
+      uses: CodeGlide/codeglide-mcpgen@v1.0.5
+      with:
+        input_directory: ${{ inputs.input_directory }}
+        create_pr: ${{ inputs.create_pr }}
+        create_branch_and_commit: ${{ inputs.create_branch_and_commit }}
