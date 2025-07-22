@@ -1,4 +1,4 @@
-name: Cisco-CodeGlide MCP generation
+name: Slack MCP generation
 
 on:
   workflow_dispatch:
