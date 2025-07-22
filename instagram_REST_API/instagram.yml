@@ -1,0 +1,743 @@
+openapi: 3.0.0
+info:
+  title: Instagram
+  description: >-
+    Description of Instagram RESTful API.
+
+
+    Current limitations:
+      * Instagram service does not support [cross origin headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
+      for security reasons, therefore it is not possible to use Swagger UI and make API calls directly from browser.
+      * Modification API requests (`POST`, `DELETE`) require additional security [scopes](https://instagram.com/developer/authorization/)
+      that are available for Apps [created on or after Nov 17, 2015](http://instagram.com/developer/review/) and
+      started in [Sandbox Mode](http://instagram.com/developer/sandbox/).
+      * Consider the [Instagram limitations](https://instagram.com/developer/limits/) for API calls that depends on App Mode.
+
+    **Warning:** For Apps [created on or after Nov 17,
+    2015](http://instagram.com/developer/changelog/) API responses
+
+    containing media objects no longer return the `data` field in `comments` and
+    `likes` nodes.
+
+
+    Last update: 2015-11-28
+
+
+
+    Contact Support:
+     Name: No Contact
+     Email: email@example.com
+  version: 1.0.0
+servers:
+  - url: http://{{baseurl}}
+tags:
+  - name: locations
+  - name: locations > {location-id}
+  - name: media
+  - name: media > {media-id}
+  - name: media > {media-id} > comments
+  - name: tags
+  - name: tags > {tag-name}
+  - name: users
+  - name: users > self
+  - name: users > {user-id}
+paths:
+  /locations/{location-id}:
+    get:
+      tags:
+        - locations > {location-id}
+      summary: Get information about a location.
+      description: Get information about a location.
+      parameters:
+        - name: location-id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: The location ID.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /locations/{location-id}/media/recent:
+    get:
+      tags:
+        - locations > {location-id}
+      summary: Get a list of recent media objects from a given location.
+      description: Get a list of recent media objects from a given location.
+      parameters:
+        - name: min_timestamp
+          in: query
+          schema:
+            type: string
+          description: Return media after this UNIX timestamp.
+          example: <integer>
+        - name: max_timestamp
+          in: query
+          schema:
+            type: string
+          description: Return media before this UNIX timestamp.
+          example: <integer>
+        - name: min_id
+          in: query
+          schema:
+            type: string
+          description: Return media before this `min_id`.
+          example: <string>
+        - name: max_id
+          in: query
+          schema:
+            type: string
+          description: Return media after this `max_id`.
+          example: <string>
+        - name: location-id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: The location ID.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /locations/search:
+    get:
+      tags:
+        - locations
+      summary: Search for a location by geographic coordinate.
+      description: Search for a location by geographic coordinate.
+      parameters:
+        - name: distance
+          in: query
+          schema:
+            type: string
+          description: Default is 1000m (distance=1000), max distance is 5000.
+          example: <integer>
+        - name: facebook_places_id
+          in: query
+          schema:
+            type: string
+          description: >-
+            Returns a location mapped off of a Facebook places id. If used, a
+            Foursquare id and `lat`, `lng` are not required.
+          example: <string>
+        - name: foursquare_id
+          in: query
+          schema:
+            type: string
+          description: >
+            Returns a location mapped off of a foursquare v1 api location id. If
+            used, you are not required to use
+
+            `lat` and `lng`. Note that this method is deprecated; you should use
+            the new foursquare IDs with V2 of their API.
+          example: <string>
+        - name: lat
+          in: query
+          schema:
+            type: string
+          description: >-
+            Latitude of the center search coordinate. If used, `lng` is
+            required.
+          example: <number>
+        - name: lng
+          in: query
+          schema:
+            type: string
+          description: >-
+            Longitude of the center search coordinate. If used, `lat` is
+            required.
+          example: <number>
+        - name: foursquare_v2_id
+          in: query
+          schema:
+            type: string
+          description: >
+            Returns a location mapped off of a foursquare v2 api location id. If
+            used, you are not required to use
+
+            `lat` and `lng`.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /media/{media-id}/comments:
+    get:
+      tags:
+        - media > {media-id} > comments
+      summary: Get a list of recent comments on a media object.
+      description: Get a list of recent comments on a media object.
+      parameters:
+        - name: media-id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: The ID of the media resource.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /media/{media-id}/comments/{comment-id}:
+    delete:
+      tags:
+        - media > {media-id} > comments
+      summary: Remove a comment.
+      description: >
+        Remove a comment either on the authenticated user's media object or
+        authored by the authenticated user.
+      parameters:
+        - name: media-id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: The ID of the media resource.
+          example: <string>
+        - name: comment-id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: The ID of the comment entry.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /media/{media-id}:
+    get:
+      tags:
+        - media > {media-id}
+      summary: Get information about a media object.
+      description: >
+        Get information about a media object. The returned type key will allow
+        you to differentiate between image and
+
+        video media.
+
+
+        **Note:** if you authenticate with an OAuth Token, you will receive the
+        user_has_liked key which quickly tells
+
+        you whether the current user has liked this media item.
+      parameters:
+        - name: media-id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: The ID of the media resource.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /media/{media-id}/likes:
+    delete:
+      tags:
+        - media > {media-id}
+      summary: Remove a like on this media by the current user.
+      description: Remove a like on this media by the currently authenticated user.
+      parameters:
+        - name: media-id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: The ID of the media resource.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /media/popular:
+    get:
+      tags:
+        - media
+      summary: Get a list of currently popular media.
+      description: >
+        Get a list of what media is most popular at the moment. Can return mix
+        of `image` and `video` types.
+
+
+        **Warning:** [Deprecated](http://instagram.com/developer/changelog/) for
+        Apps created **on or after** Nov 17, 2015
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /media/search:
+    get:
+      tags:
+        - media
+      summary: Search for media in a given area.
+      description: >
+        Search for media in a given area. The default time span is set to 5
+        days. The time span must not exceed 7 days.
+
+        Defaults time stamps cover the last 5 days. Can return mix of `image`
+        and `video` types.
+      parameters:
+        - name: lat
+          in: query
+          schema:
+            type: string
+          description: >-
+            Latitude of the center search coordinate. If used, `lng` is
+            required.
+          example: <number>
+        - name: lng
+          in: query
+          schema:
+            type: string
+          description: >-
+            Longitude of the center search coordinate. If used, `lat` is
+            required.
+          example: <number>
+        - name: min_timestamp
+          in: query
+          schema:
+            type: string
+          description: Return media after this UNIX timestamp.
+          example: <integer>
+        - name: max_timestamp
+          in: query
+          schema:
+            type: string
+          description: Return media before this UNIX timestamp.
+          example: <integer>
+        - name: distance
+          in: query
+          schema:
+            type: string
+          description: Default is 1000m (distance=1000), max distance is 5000.
+          example: <integer>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /media/shortcode/{shortcode}:
+    get:
+      tags:
+        - media
+      summary: Get information about a media object.
+      description: >
+        This endpoint returns the same response as `GET /media/{media-id}`.
+
+
+        A media object's shortcode can be found in its shortlink URL. An example
+        shortlink is
+
+        `http://instagram.com/p/D/`, its corresponding shortcode is `D`.
+      parameters:
+        - name: shortcode
+          in: path
+          schema:
+            type: string
+          required: true
+          description: The short code of the media resource.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /tags/{tag-name}:
+    get:
+      tags:
+        - tags > {tag-name}
+      summary: Get information about a tag object.
+      description: Get information about a tag object.
+      parameters:
+        - name: tag-name
+          in: path
+          schema:
+            type: string
+          required: true
+          description: The tag name.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /tags/{tag-name}/media/recent:
+    get:
+      tags:
+        - tags > {tag-name}
+      summary: Get a list of recently tagged media.
+      description: >
+        Get a list of recently tagged media. Use the `max_tag_id` and
+        `min_tag_id` parameters in the pagination
+
+        response to paginate through these objects.
+      parameters:
+        - name: count
+          in: query
+          schema:
+            type: string
+          description: Max number of media to return.
+          example: <integer>
+        - name: min_tag_id
+          in: query
+          schema:
+            type: string
+          description: Return media before this `min_tag_id`.
+          example: <string>
+        - name: max_tag_id
+          in: query
+          schema:
+            type: string
+          description: Return media after this `max_tag_id`.
+          example: <string>
+        - name: tag-name
+          in: path
+          schema:
+            type: string
+          required: true
+          description: The tag name.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /tags/search:
+    get:
+      tags:
+        - tags
+      summary: Search for tags by name.
+      description: Search for tags by name.
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+          description: A valid tag name without a leading \#. (eg. snowy, nofilter)
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /users/self/feed:
+    get:
+      tags:
+        - users > self
+      summary: See the authenticated user's feed.
+      description: >
+        See the authenticated user's feed.
+
+
+        **Warning:** [Deprecated](http://instagram.com/developer/changelog/) for
+        Apps created **on or after** Nov 17, 2015
+      parameters:
+        - name: count
+          in: query
+          schema:
+            type: string
+          description: Max number of media to return.
+          example: <integer>
+        - name: min_id
+          in: query
+          schema:
+            type: string
+          description: Return media before this `min_id`.
+          example: <string>
+        - name: max_id
+          in: query
+          schema:
+            type: string
+          description: Return media after this `max_id`.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /users/self/media/liked:
+    get:
+      tags:
+        - users > self
+      summary: See the list of media liked by the authenticated user.
+      description: >
+        See the list of media liked by the authenticated user. Private media is
+        returned as long as the authenticated
+
+        user has permission to view that media. Liked media lists are only
+        available for the currently authenticated
+
+        user.
+      parameters:
+        - name: count
+          in: query
+          schema:
+            type: string
+          description: Max number of media to return.
+          example: <integer>
+        - name: max_like_id
+          in: query
+          schema:
+            type: string
+          description: Return media liked before this id.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /users/self/requested-by:
+    get:
+      tags:
+        - users > self
+      summary: List the users who have requested this user's permission to follow.
+      description: List the users who have requested this user's permission to follow.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /users/{user-id}:
+    get:
+      tags:
+        - users > {user-id}
+      summary: Get basic information about a user.
+      description: >
+        Get basic information about a user. To get information about the owner
+        of the access token, you can use
+
+        **self** instead of the `user-id`.
+
+
+        Security scope `public_content` is required to read information about
+        other users.
+      parameters:
+        - name: user-id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: >-
+            The ID of a user to get information about, or **self** to retrieve
+            information about authenticated user.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /users/{user-id}/followed-by:
+    get:
+      tags:
+        - users > {user-id}
+      summary: Get the list of users this user is followed by.
+      description: >
+        Get the list of users this user is followed by. To get users followed by
+        the owner of the access token, you
+
+        can use **self** instead of the `user-id`.
+      parameters:
+        - name: user-id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: >-
+            The ID of a user to get information about, or **self** to retrieve
+            information about authenticated user.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /users/{user-id}/follows:
+    get:
+      tags:
+        - users > {user-id}
+      summary: Get the list of users this user follows.
+      description: >
+        Get the list of users this user follows. To get follows of the owner of
+        the access token, you can use **self**
+
+        instead of the `user-id`.
+      parameters:
+        - name: user-id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: >-
+            The ID of a user to get information about, or **self** to retrieve
+            information about authenticated user.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /users/{user-id}/media/recent:
+    get:
+      tags:
+        - users > {user-id}
+      summary: Get the most recent media published by a user.
+      description: >
+        Get the most recent media published by a user. To get the most recent
+        media published by the owner of the
+
+        access token, you can use **self** instead of the `user-id`.
+
+
+        Security scope `public_content` is required to read information about
+        other users.
+      parameters:
+        - name: count
+          in: query
+          schema:
+            type: string
+          description: Max number of media to return.
+          example: <integer>
+        - name: max_timestamp
+          in: query
+          schema:
+            type: string
+          description: Return media before this UNIX timestamp.
+          example: <integer>
+        - name: min_timestamp
+          in: query
+          schema:
+            type: string
+          description: Return media after this UNIX timestamp.
+          example: <integer>
+        - name: min_id
+          in: query
+          schema:
+            type: string
+          description: Return media before this `min_id`.
+          example: <string>
+        - name: max_id
+          in: query
+          schema:
+            type: string
+          description: Return media after this `max_id`.
+          example: <string>
+        - name: user-id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: >-
+            The ID of a user to get information about, or **self** to retrieve
+            information about authenticated user.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /users/{user-id}/relationship:
+    get:
+      tags:
+        - users > {user-id}
+      summary: Get information about a relationship to another user.
+      description: Get information about a relationship to another user.
+      parameters:
+        - name: user-id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: >-
+            The ID of a user to get information about, or **self** to retrieve
+            information about authenticated user.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /users/search:
+    get:
+      tags:
+        - users
+      summary: Search for a user by name.
+      description: Search for a user by name.
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+          description: A valid tag name without a leading \#. (eg. snowy, nofilter)
+          example: <string>
+        - name: count
+          in: query
+          schema:
+            type: string
+          description: Max number of media to return.
+          example: <integer>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /geographies/{geo-id}/media/recent:
+    get:
+      tags:
+        - General
+      summary: Get recent media from a custom geo-id.
+      description: >-
+        Get recent media from a geography subscription that you created.
+
+
+        **Note:** You can only access Geographies that were explicitly created
+        by your OAuth client. Check the
+
+        Geography Subscriptions section of the [real-time updates
+        page](https://instagram.com/developer/realtime/).
+
+        When you create a subscription to some geography that you define, you
+        will be returned a unique `geo-id` that
+
+        can be used in this query. To backfill photos from the location covered
+        by this geography, use the
+
+        [media search 
+      parameters:
+        - name: count
+          in: query
+          schema:
+            type: string
+          description: Max number of media to return.
+          example: <integer>
+        - name: min_id
+          in: query
+          schema:
+            type: string
+          description: Return media before this `min_id`.
+          example: <string>
+        - name: geo-id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: The geography ID.
+          example: <string>
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
