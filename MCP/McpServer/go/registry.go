@@ -1,0 +1,684 @@
+package main
+
+import (
+	"github.com/meraki-dashboard-api-v1-9-0/mcp-server/config"
+	"github.com/meraki-dashboard-api-v1-9-0/mcp-server/models"
+	tools_products_switch_configure_routing_interfaces_dhcp "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_routing_interfaces_dhcp"
+	tools_products_switch_configure_config_templates_profiles "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_config_templates_profiles"
+	tools_products_switch_configure_port_schedules "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_port_schedules"
+	tools_general_organizations_configure_branding_policies_priorities "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_configure_branding_policies_priorities"
+	tools_products_sm_configure_users_softwares "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_users_softwares"
+	tools_general_networks_monitor_traffic "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_monitor_traffic"
+	tools_products_switch_configure_warm_spare "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_warm_spare"
+	tools_products_switch_configure_alternate_management_interface "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_alternate_management_interface"
+	tools_products_cellular_gateway_configure_lan "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_cellular_gateway_configure_lan"
+	tools_products_sm_configure_bypass_activation_lock_attempts "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_bypass_activation_lock_attempts"
+	tools_general_networks_configure_webhooks_webhook_tests "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_webhooks_webhook_tests"
+	tools_general "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general"
+	tools_products_wireless_configure_settings "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_configure_settings"
+	tools_products_wireless_configure_ssids_firewall_l_3_firewall_rules "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_configure_ssids_firewall_l_3_firewall_rules"
+	tools_products_appliance_configure_connectivity_monitoring_destinations "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_connectivity_monitoring_destinations"
+	tools_products_sm_configure_devices "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_devices"
+	tools_general_networks_monitor_events "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_monitor_events"
+	tools_products_sm_configure_users_device_profiles "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_users_device_profiles"
+	tools_general_networks_configure_clients_policy "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_clients_policy"
+	tools_products_wireless_configure_rf_profiles "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_configure_rf_profiles"
+	tools_products_wireless_configure_ssids_schedules "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_configure_ssids_schedules"
+	tools_general_organizations_configure_action_batches "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_configure_action_batches"
+	tools_products_sm_configure_target_groups "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_target_groups"
+	tools_products_wireless_monitor_data_rate_history "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_data_rate_history"
+	tools_general_networks_configure_meraki_auth_users "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_meraki_auth_users"
+	tools_general_organizations_configure_admins "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_configure_admins"
+	tools_products_appliance_configure_firewall_one_to_one_nat_rules "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_firewall_one_to_one_nat_rules"
+	tools_general_networks_configure_settings "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_settings"
+	tools_products_wireless_configure_ssids_identity_psks "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_configure_ssids_identity_psks"
+	tools_general_networks_configure_pii_sm_owners_for_key "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_pii_sm_owners_for_key"
+	tools_general_networks_monitor_network_health_channelutilization "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_monitor_network_health_channelutilization"
+	tools_products_wireless_configure_ssids_firewall_l_7_firewall_rules "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_configure_ssids_firewall_l_7_firewall_rules"
+	tools_general_devices_monitor_clients "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_devices_monitor_clients"
+	tools_products_sm_monitor_devices_cellular_usage_history "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_monitor_devices_cellular_usage_history"
+	tools_general_devices_configure "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_devices_configure"
+	tools_products_wireless_monitor_signal_quality_history "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_signal_quality_history"
+	tools_general_networks_monitor_splash_login_attempts "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_monitor_splash_login_attempts"
+	tools_products_appliance_configure_vpn_site_to_site_vpn "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_vpn_site_to_site_vpn"
+	tools_products_switch_configure_qos_rules "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_qos_rules"
+	tools_general_organizations_monitor_openapi_spec "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_monitor_openapi_spec"
+	tools_general_networks_configure_pii_requests "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_pii_requests"
+	tools_general_networks_monitor_clients_traffic_history "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_monitor_clients_traffic_history"
+	tools_general_networks_configure_clients_splash_authorization_status "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_clients_splash_authorization_status"
+	tools_products_wireless_monitor_clients_latency_stats "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_clients_latency_stats"
+	tools_general_organizations_monitor_webhooks_logs "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_monitor_webhooks_logs"
+	tools_general_organizations_configure "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_configure"
+	tools_products_sm_configure_user_access_devices "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_user_access_devices"
+	tools_products_cellular_gateway_configure_dhcp "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_cellular_gateway_configure_dhcp"
+	tools_general_organizations_configure_licenses "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_configure_licenses"
+	tools_products_switch_configure_routing_static_routes "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_routing_static_routes"
+	tools_products_wireless_monitor_failed_connections "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_failed_connections"
+	tools_products_switch_configure_stacks "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_stacks"
+	tools_products_appliance_configure_security_intrusion "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_security_intrusion"
+	tools_products_sm_monitor_devices_connectivity "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_monitor_devices_connectivity"
+	tools_general_organizations_monitor_webhooks_alert_types "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_monitor_webhooks_alert_types"
+	tools_general_networks_configure_floor_plans "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_floor_plans"
+	tools_products_camera_monitor_analytics_zones_history "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_camera_monitor_analytics_zones_history"
+	tools_products_appliance_configure_traffic_shaping "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_traffic_shaping"
+	tools_products_appliance_configure_firewall_port_forwarding_rules "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_firewall_port_forwarding_rules"
+	tools_products_wireless_configure_ssids_device_type_group_policies "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_configure_ssids_device_type_group_policies"
+	tools_products_appliance_configure_traffic_shaping_uplink_selection "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_traffic_shaping_uplink_selection"
+	tools_products_wireless_configure_bluetooth_settings "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_configure_bluetooth_settings"
+	tools_general_organizations_monitor_api_requests "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_monitor_api_requests"
+	tools_products_wireless_monitor_usage_history "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_usage_history"
+	tools_general_organizations_monitor_configuration_changes "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_monitor_configuration_changes"
+	tools_products_appliance_configure_firewall_l_3_firewall_rules "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_firewall_l_3_firewall_rules"
+	tools_products_wireless_monitor_latency_stats "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_latency_stats"
+	tools_general_networks_configure_webhooks_http_servers "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_webhooks_http_servers"
+	tools_products_wireless_monitor_connection_stats "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_connection_stats"
+	tools_general_devices_monitor_loss_and_latency_history "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_devices_monitor_loss_and_latency_history"
+	tools_general_networks_monitor_clients_overview "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_monitor_clients_overview"
+	tools_products_sm_monitor_devices_performance_history "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_monitor_devices_performance_history"
+	tools_products_camera_configure_quality_retention_profiles "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_camera_configure_quality_retention_profiles"
+	tools_products_camera_monitor_analytics_live "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_camera_monitor_analytics_live"
+	tools_products_wireless_monitor_client_count_history "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_client_count_history"
+	tools_products_wireless_configure_alternate_management_interface "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_configure_alternate_management_interface"
+	tools_general_networks_monitor_bluetooth_clients "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_monitor_bluetooth_clients"
+	tools_products_appliance_configure_firewall_firewalled_services "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_firewall_firewalled_services"
+	tools_products_wireless_monitor_mesh_statuses "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_mesh_statuses"
+	tools_products_switch_configure_routing_ospf "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_routing_ospf"
+	tools_general_organizations_configure_saml_idps "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_configure_saml_idps"
+	tools_products_appliance_configure_traffic_shaping_rules "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_traffic_shaping_rules"
+	tools_general_organizations_configure_networks "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_configure_networks"
+	tools_products_appliance_configure_firewall_inbound_firewall_rules "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_firewall_inbound_firewall_rules"
+	tools_general_networks_configure_clients "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_clients"
+	tools_products_sm_monitor_devices_desktop_logs "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_monitor_devices_desktop_logs"
+	tools_products_wireless_monitor_clients_latency_history "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_clients_latency_history"
+	tools_products_appliance_configure_warm_spare "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_warm_spare"
+	tools_general_organizations_configure_saml "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_configure_saml"
+	tools_products_appliance_configure_vpn_third_party_vpn_peers "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_vpn_third_party_vpn_peers"
+	tools_products_switch_configure_stacks_routing_static_routes "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_stacks_routing_static_routes"
+	tools_products_cellular_gateway_configure_subnet_pool "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_cellular_gateway_configure_subnet_pool"
+	tools_products_switch_configure_storm_control "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_storm_control"
+	tools_products_cellular_gateway_monitor_uplink_statuses "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_cellular_gateway_monitor_uplink_statuses"
+	tools_products_switch_configure_qos_rules_order "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_qos_rules_order"
+	tools_products_camera_configure_sense "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_camera_configure_sense"
+	tools_products_switch_configure_routing_multicast "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_routing_multicast"
+	tools_products_switch_configure_settings "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_settings"
+	tools_general_networks_configure_traffic_shaping_dscp_tagging_options "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_traffic_shaping_dscp_tagging_options"
+	tools_products_camera_monitor_analytics_recent "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_camera_monitor_analytics_recent"
+	tools_products_appliance_configure_ports "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_ports"
+	tools_products_appliance_monitor_security_events "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_monitor_security_events"
+	tools_products_cellular_gateway_configure_uplink "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_cellular_gateway_configure_uplink"
+	tools_products_wireless_configure_ssids_traffic_shaping_rules "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_configure_ssids_traffic_shaping_rules"
+	tools_products_appliance_configure_firewall_one_to_many_nat_rules "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_firewall_one_to_many_nat_rules"
+	tools_products_switch_configure_dhcp_server_policy "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_dhcp_server_policy"
+	tools_products_sm_monitor_devices_device_command_logs "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_monitor_devices_device_command_logs"
+	tools_products_insight_configure_monitored_media_servers "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_insight_configure_monitored_media_servers"
+	tools_products_wireless_monitor_devices_connection_stats "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_devices_connection_stats"
+	tools_products_switch_configure_config_templates_profiles_ports "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_config_templates_profiles_ports"
+	tools_products_appliance_configure_static_routes "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_static_routes"
+	tools_products_sm_configure_devices_restrictions "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_devices_restrictions"
+	tools_products_wireless_configure_radio_settings "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_configure_radio_settings"
+	tools_general_networks_configure "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure"
+	tools_products_camera_configure_schedules "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_camera_configure_schedules"
+	tools_products_sm_configure_devices_wlan_lists "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_devices_wlan_lists"
+	tools_products_camera_configure_sense_object_detection_models "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_camera_configure_sense_object_detection_models"
+	tools_products_cellular_gateway_configure_connectivity_monitoring_destinations "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_cellular_gateway_configure_connectivity_monitoring_destinations"
+	tools_general_networks_configure_devices "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_devices"
+	tools_products_switch_configure_routing_interfaces "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_routing_interfaces"
+	tools_products_camera_configure_video_link "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_camera_configure_video_link"
+	tools_products_appliance_configure_firewall_cellular_firewall_rules "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_firewall_cellular_firewall_rules"
+	tools_general_networks_configure_mqtt_brokers "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_mqtt_brokers"
+	tools_products_wireless_configure_ssids_bonjour_forwarding "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_configure_ssids_bonjour_forwarding"
+	tools_products_appliance_configure_content_filtering_categories "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_content_filtering_categories"
+	tools_general_organizations_configure_config_templates "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_configure_config_templates"
+	tools_products_appliance_monitor_vpn_stats "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_monitor_vpn_stats"
+	tools_products_wireless_configure_billing "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_configure_billing"
+	tools_products_switch_configure_stacks_routing_interfaces "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_stacks_routing_interfaces"
+	tools_products_cellular_gateway_configure_port_forwarding_rules "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_cellular_gateway_configure_port_forwarding_rules"
+	tools_products_switch_monitor_ports_statuses_packets "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_monitor_ports_statuses_packets"
+	tools_general_networks_configure_pii_sm_devices_for_key "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_pii_sm_devices_for_key"
+	tools_products_wireless_monitor_clients_connection_stats "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_clients_connection_stats"
+	tools_products_appliance_configure_vpn_bgp "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_vpn_bgp"
+	tools_products_sm_configure_vpp_accounts "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_vpp_accounts"
+	tools_products_switch_configure_routing_multicast_rendezvous_points "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_routing_multicast_rendezvous_points"
+	tools_products_switch_configure_devices "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_devices"
+	tools_general_networks_configure_traffic_shaping_application_categories "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_traffic_shaping_application_categories"
+	tools_products_switch_live_tools_ports "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_live_tools_ports"
+	tools_general_organizations_configure_branding_policies "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_configure_branding_policies"
+	tools_general_networks_monitor_clients_usage_histories "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_monitor_clients_usage_histories"
+	tools_products_appliance_monitor_performance "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_monitor_performance"
+	tools_products_wireless_configure_ssids_vpn "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_configure_ssids_vpn"
+	tools_general_organizations_configure_saml_roles "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_configure_saml_roles"
+	tools_products_appliance_configure_security_malware "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_security_malware"
+	tools_products_sm_configure_devices_certs "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_devices_certs"
+	tools_products_sm_configure_devices_softwares "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_devices_softwares"
+	tools_products_wireless_configure_ssids "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_configure_ssids"
+	tools_general_organizations_configure_login_security "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_configure_login_security"
+	tools_products_wireless_monitor_air_marshal "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_air_marshal"
+	tools_products_camera_configure_quality_and_retention "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_camera_configure_quality_and_retention"
+	tools_products_appliance_monitor_dhcp_subnets "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_monitor_dhcp_subnets"
+	tools_general_networks_configure_group_policies "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_group_policies"
+	tools_products_appliance_configure_settings "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_settings"
+	tools_general_organizations_configure_snmp "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_configure_snmp"
+	tools_products_appliance_configure_firewall_l_7_firewall_rules_application_categories "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_firewall_l_7_firewall_rules_application_categories"
+	tools_products_sm_configure_devices_fields "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_devices_fields"
+	tools_products_wireless_monitor_latency_history "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_latency_history"
+	tools_general_networks_configure_firmware_upgrades "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_firmware_upgrades"
+	tools_general_devices_configure_management_interface "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_devices_configure_management_interface"
+	tools_products_appliance_configure_traffic_shaping_custom_performance_classes "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_traffic_shaping_custom_performance_classes"
+	tools_general_devices_live_tools "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_devices_live_tools"
+	tools_products_appliance_configure_single_lan "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_single_lan"
+	tools_products_sm_configure_devices_network_adapters "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_devices_network_adapters"
+	tools_products_switch_monitor_ports_statuses "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_monitor_ports_statuses"
+	tools_general_networks_configure_firmware_upgrades_rollbacks "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_firmware_upgrades_rollbacks"
+	tools_general_organizations_configure_inventory_devices "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_configure_inventory_devices"
+	tools_products_wireless_configure_ssids_splash_settings "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_configure_ssids_splash_settings"
+	tools_products_insight_configure_applications "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_insight_configure_applications"
+	tools_products_switch_configure_stacks_routing_interfaces_dhcp "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_stacks_routing_interfaces_dhcp"
+	tools_products_appliance_configure_content_filtering "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_content_filtering"
+	tools_products_sm_configure_profiles "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_profiles"
+	tools_general_networks_monitor_clients_usage_history "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_monitor_clients_usage_history"
+	tools_products_sm_configure_apns_cert "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_apns_cert"
+	tools_products_switch_configure_ports "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_ports"
+	tools_general_devices_monitor_lldp_cdp "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_devices_monitor_lldp_cdp"
+	tools_products_sm_configure_users "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_users"
+	tools_products_camera_monitor "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_camera_monitor"
+	tools_products_camera_configure_video_settings "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_camera_configure_video_settings"
+	tools_products_camera_monitor_analytics_zones "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_camera_monitor_analytics_zones"
+	tools_general_networks_configure_pii_pii_keys "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_pii_pii_keys"
+	tools_products_appliance_configure_vlans "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_vlans"
+	tools_products_switch_configure_mtu "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_mtu"
+	tools_products_wireless_monitor_clients_connectivity_events "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_clients_connectivity_events"
+	tools_general_networks_configure_alerts_settings "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_alerts_settings"
+	tools_products_wireless_monitor_channel_utilization_history "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_channel_utilization_history"
+	tools_general_organizations_monitor_uplinks_statuses "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_monitor_uplinks_statuses"
+	tools_products_appliance_monitor_uplink_statuses "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_monitor_uplink_statuses"
+	tools_products_wireless_monitor_status "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_status"
+	tools_products_sm_configure_devices_device_profiles "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_devices_device_profiles"
+	tools_products_switch_configure_link_aggregations "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_link_aggregations"
+	tools_products_appliance_monitor_clients_security_events "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_monitor_clients_security_events"
+	tools_general_organizations_monitor_devices_uplinks_loss_and_latency "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_monitor_devices_uplinks_loss_and_latency"
+	tools_general_networks_configure_traffic_analysis "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_traffic_analysis"
+	tools_products_wireless_monitor_devices_latency_stats "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_wireless_monitor_devices_latency_stats"
+	tools_products_appliance_monitor_vpn_statuses "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_monitor_vpn_statuses"
+	tools_general_organizations_monitor_api_requests_overview "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_monitor_api_requests_overview"
+	tools_products_appliance_configure_vlans_settings "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_vlans_settings"
+	tools_products_sm_configure_devices_security_centers "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_sm_configure_devices_security_centers"
+	tools_general_networks_configure_netflow "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_netflow"
+	tools_general_organizations_monitor_licenses_overview "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_monitor_licenses_overview"
+	tools_general_networks_configure_syslog_servers "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_syslog_servers"
+	tools_products_switch_configure_stp "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_stp"
+	tools_products_switch_configure_access_control_lists "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_access_control_lists"
+	tools_general_organizations_monitor_devices_statuses "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_organizations_monitor_devices_statuses"
+	tools_general_networks_monitor_events_event_types "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_monitor_events_event_types"
+	tools_products_appliance_configure_firewall_l_7_firewall_rules "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_firewall_l_7_firewall_rules"
+	tools_products_camera_monitor_analytics_overview "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_camera_monitor_analytics_overview"
+	tools_products_appliance_configure_vpn_vpn_firewall_rules "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_appliance_configure_vpn_vpn_firewall_rules"
+	tools_products_switch_configure_access_policies "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_access_policies"
+	tools_general_networks_configure_snmp "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_configure_snmp"
+	tools_products_switch_configure_dscp_to_cos_mappings "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/products_switch_configure_dscp_to_cos_mappings"
+	tools_general_networks_monitor_clients "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_monitor_clients"
+	tools_general_networks_monitor_clients_application_usage "github.com/meraki-dashboard-api-v1-9-0/mcp-server/tools/general_networks_monitor_clients_application_usage"
+)
+
+func GetAll(cfg *config.APIConfig) []models.Tool {
+	return []models.Tool{
+		tools_products_switch_configure_routing_interfaces_dhcp.CreatePut_devices_serial_switch_routing_interfaces_interfaceid_dhcpTool(cfg),
+		tools_products_switch_configure_routing_interfaces_dhcp.CreateGet_devices_serial_switch_routing_interfaces_interfaceid_dhcpTool(cfg),
+		tools_products_switch_configure_config_templates_profiles.CreateGet_organizations_organizationid_configtemplates_configtemplateid_switch_profilesTool(cfg),
+		tools_products_switch_configure_port_schedules.CreateGet_networks_networkid_switch_portschedulesTool(cfg),
+		tools_products_switch_configure_port_schedules.CreatePost_networks_networkid_switch_portschedulesTool(cfg),
+		tools_general_organizations_configure_branding_policies_priorities.CreateGet_organizations_organizationid_brandingpolicies_prioritiesTool(cfg),
+		tools_general_organizations_configure_branding_policies_priorities.CreatePut_organizations_organizationid_brandingpolicies_prioritiesTool(cfg),
+		tools_products_sm_configure_users_softwares.CreateGet_networks_networkid_sm_users_userid_softwaresTool(cfg),
+		tools_general_networks_monitor_traffic.CreateGet_networks_networkid_trafficTool(cfg),
+		tools_products_switch_configure_warm_spare.CreateGet_devices_serial_switch_warmspareTool(cfg),
+		tools_products_switch_configure_warm_spare.CreatePut_devices_serial_switch_warmspareTool(cfg),
+		tools_products_switch_configure_alternate_management_interface.CreateGet_networks_networkid_switch_alternatemanagementinterfaceTool(cfg),
+		tools_products_switch_configure_alternate_management_interface.CreatePut_networks_networkid_switch_alternatemanagementinterfaceTool(cfg),
+		tools_products_cellular_gateway_configure_lan.CreateGet_devices_serial_cellulargateway_lanTool(cfg),
+		tools_products_cellular_gateway_configure_lan.CreatePut_devices_serial_cellulargateway_lanTool(cfg),
+		tools_products_sm_configure_bypass_activation_lock_attempts.CreatePost_networks_networkid_sm_bypassactivationlockattemptsTool(cfg),
+		tools_general_networks_configure_webhooks_webhook_tests.CreateGet_networks_networkid_webhooks_webhooktests_webhooktestidTool(cfg),
+		tools_general.CreateGet_networks_networkid_clientsTool(cfg),
+		tools_products_wireless_configure_settings.CreateGet_networks_networkid_wireless_settingsTool(cfg),
+		tools_products_wireless_configure_settings.CreatePut_networks_networkid_wireless_settingsTool(cfg),
+		tools_products_wireless_configure_ssids_firewall_l_3_firewall_rules.CreateGet_networks_networkid_wireless_ssids_number_firewall_l3firewallrulesTool(cfg),
+		tools_products_wireless_configure_ssids_firewall_l_3_firewall_rules.CreatePut_networks_networkid_wireless_ssids_number_firewall_l3firewallrulesTool(cfg),
+		tools_products_appliance_configure_connectivity_monitoring_destinations.CreateGet_networks_networkid_appliance_connectivitymonitoringdestinationsTool(cfg),
+		tools_products_appliance_configure_connectivity_monitoring_destinations.CreatePut_networks_networkid_appliance_connectivitymonitoringdestinationsTool(cfg),
+		tools_general.CreateGet_organizations_organizationid_devicesTool(cfg),
+		tools_products_sm_configure_devices.CreatePost_networks_networkid_sm_devices_checkinTool(cfg),
+		tools_general_networks_monitor_events.CreateGet_networks_networkid_eventsTool(cfg),
+		tools_products_sm_configure_users_device_profiles.CreateGet_networks_networkid_sm_users_userid_deviceprofilesTool(cfg),
+		tools_general_networks_configure_clients_policy.CreateGet_networks_networkid_clients_clientid_policyTool(cfg),
+		tools_general_networks_configure_clients_policy.CreatePut_networks_networkid_clients_clientid_policyTool(cfg),
+		tools_products_wireless_configure_rf_profiles.CreateDelete_networks_networkid_wireless_rfprofiles_rfprofileidTool(cfg),
+		tools_products_wireless_configure_rf_profiles.CreateGet_networks_networkid_wireless_rfprofiles_rfprofileidTool(cfg),
+		tools_products_wireless_configure_rf_profiles.CreatePut_networks_networkid_wireless_rfprofiles_rfprofileidTool(cfg),
+		tools_products_wireless_configure_ssids_schedules.CreateGet_networks_networkid_wireless_ssids_number_schedulesTool(cfg),
+		tools_products_wireless_configure_ssids_schedules.CreatePut_networks_networkid_wireless_ssids_number_schedulesTool(cfg),
+		tools_general_organizations_configure_action_batches.CreatePut_organizations_organizationid_actionbatches_actionbatchidTool(cfg),
+		tools_general_organizations_configure_action_batches.CreateDelete_organizations_organizationid_actionbatches_actionbatchidTool(cfg),
+		tools_general_organizations_configure_action_batches.CreateGet_organizations_organizationid_actionbatches_actionbatchidTool(cfg),
+		tools_products_sm_configure_target_groups.CreateDelete_networks_networkid_sm_targetgroups_targetgroupidTool(cfg),
+		tools_products_sm_configure_target_groups.CreateGet_networks_networkid_sm_targetgroups_targetgroupidTool(cfg),
+		tools_products_sm_configure_target_groups.CreatePut_networks_networkid_sm_targetgroups_targetgroupidTool(cfg),
+		tools_products_wireless_monitor_data_rate_history.CreateGet_networks_networkid_wireless_dataratehistoryTool(cfg),
+		tools_general_networks_configure_meraki_auth_users.CreatePut_networks_networkid_merakiauthusers_merakiauthuseridTool(cfg),
+		tools_general_networks_configure_meraki_auth_users.CreateDelete_networks_networkid_merakiauthusers_merakiauthuseridTool(cfg),
+		tools_general_networks_configure_meraki_auth_users.CreateGet_networks_networkid_merakiauthusers_merakiauthuseridTool(cfg),
+		tools_general_organizations_configure_admins.CreateGet_organizations_organizationid_adminsTool(cfg),
+		tools_general_organizations_configure_admins.CreatePost_organizations_organizationid_adminsTool(cfg),
+		tools_products_appliance_configure_firewall_one_to_one_nat_rules.CreateGet_networks_networkid_appliance_firewall_onetoonenatrulesTool(cfg),
+		tools_products_appliance_configure_firewall_one_to_one_nat_rules.CreatePut_networks_networkid_appliance_firewall_onetoonenatrulesTool(cfg),
+		tools_general_networks_configure_settings.CreateGet_networks_networkid_settingsTool(cfg),
+		tools_general_networks_configure_settings.CreatePut_networks_networkid_settingsTool(cfg),
+		tools_products_wireless_configure_ssids_identity_psks.CreateGet_networks_networkid_wireless_ssids_number_identitypsks_identitypskidTool(cfg),
+		tools_products_wireless_configure_ssids_identity_psks.CreatePut_networks_networkid_wireless_ssids_number_identitypsks_identitypskidTool(cfg),
+		tools_products_wireless_configure_ssids_identity_psks.CreateDelete_networks_networkid_wireless_ssids_number_identitypsks_identitypskidTool(cfg),
+		tools_general_networks_configure_pii_sm_owners_for_key.CreateGet_networks_networkid_pii_smownersforkeyTool(cfg),
+		tools_products_sm_configure_devices.CreatePost_networks_networkid_sm_devices_deviceid_unenrollTool(cfg),
+		tools_general_networks_monitor_network_health_channelutilization.CreateGet_networks_networkid_networkhealth_channelutilizationTool(cfg),
+		tools_products_wireless_configure_ssids_firewall_l_7_firewall_rules.CreateGet_networks_networkid_wireless_ssids_number_firewall_l7firewallrulesTool(cfg),
+		tools_products_wireless_configure_ssids_firewall_l_7_firewall_rules.CreatePut_networks_networkid_wireless_ssids_number_firewall_l7firewallrulesTool(cfg),
+		tools_general_devices_monitor_clients.CreateGet_devices_serial_clientsTool(cfg),
+		tools_products_sm_monitor_devices_cellular_usage_history.CreateGet_networks_networkid_sm_devices_deviceid_cellularusagehistoryTool(cfg),
+		tools_general_devices_configure.CreateGet_devices_serialTool(cfg),
+		tools_general_devices_configure.CreatePut_devices_serialTool(cfg),
+		tools_products_wireless_monitor_signal_quality_history.CreateGet_networks_networkid_wireless_signalqualityhistoryTool(cfg),
+		tools_general_networks_monitor_splash_login_attempts.CreateGet_networks_networkid_splashloginattemptsTool(cfg),
+		tools_products_appliance_configure_vpn_site_to_site_vpn.CreateGet_networks_networkid_appliance_vpn_sitetositevpnTool(cfg),
+		tools_products_appliance_configure_vpn_site_to_site_vpn.CreatePut_networks_networkid_appliance_vpn_sitetositevpnTool(cfg),
+		tools_products_switch_configure_qos_rules.CreateGet_networks_networkid_switch_qosrulesTool(cfg),
+		tools_products_switch_configure_qos_rules.CreatePost_networks_networkid_switch_qosrulesTool(cfg),
+		tools_general_organizations_monitor_openapi_spec.CreateGet_organizations_organizationid_openapispecTool(cfg),
+		tools_general_networks_configure_pii_requests.CreateDelete_networks_networkid_pii_requests_requestidTool(cfg),
+		tools_general_networks_configure_pii_requests.CreateGet_networks_networkid_pii_requests_requestidTool(cfg),
+		tools_general_networks_monitor_clients_traffic_history.CreateGet_networks_networkid_clients_clientid_traffichistoryTool(cfg),
+		tools_general_networks_configure_clients_splash_authorization_status.CreateGet_networks_networkid_clients_clientid_splashauthorizationstatusTool(cfg),
+		tools_general_networks_configure_clients_splash_authorization_status.CreatePut_networks_networkid_clients_clientid_splashauthorizationstatusTool(cfg),
+		tools_products_wireless_monitor_clients_latency_stats.CreateGet_networks_networkid_wireless_clients_clientid_latencystatsTool(cfg),
+		tools_general_organizations_monitor_webhooks_logs.CreateGet_organizations_organizationid_webhooks_logsTool(cfg),
+		tools_general_organizations_configure.CreateDelete_organizations_organizationidTool(cfg),
+		tools_general_organizations_configure.CreateGet_organizations_organizationidTool(cfg),
+		tools_general_organizations_configure.CreatePut_organizations_organizationidTool(cfg),
+		tools_products_sm_configure_user_access_devices.CreateDelete_networks_networkid_sm_useraccessdevices_useraccessdeviceidTool(cfg),
+		tools_products_cellular_gateway_configure_dhcp.CreateGet_networks_networkid_cellulargateway_dhcpTool(cfg),
+		tools_products_cellular_gateway_configure_dhcp.CreatePut_networks_networkid_cellulargateway_dhcpTool(cfg),
+		tools_general_organizations_configure_licenses.CreatePost_organizations_organizationid_licenses_assignseatsTool(cfg),
+		tools_general_organizations_configure_licenses.CreatePost_organizations_organizationid_licenses_moveTool(cfg),
+		tools_products_switch_configure_routing_static_routes.CreatePut_devices_serial_switch_routing_staticroutes_staticrouteidTool(cfg),
+		tools_products_switch_configure_routing_static_routes.CreateDelete_devices_serial_switch_routing_staticroutes_staticrouteidTool(cfg),
+		tools_products_switch_configure_routing_static_routes.CreateGet_devices_serial_switch_routing_staticroutes_staticrouteidTool(cfg),
+		tools_products_wireless_monitor_failed_connections.CreateGet_networks_networkid_wireless_failedconnectionsTool(cfg),
+		tools_products_switch_configure_stacks.CreateDelete_networks_networkid_switch_stacks_switchstackidTool(cfg),
+		tools_products_switch_configure_stacks.CreateGet_networks_networkid_switch_stacks_switchstackidTool(cfg),
+		tools_products_appliance_configure_security_intrusion.CreatePut_networks_networkid_appliance_security_intrusionTool(cfg),
+		tools_products_appliance_configure_security_intrusion.CreateGet_networks_networkid_appliance_security_intrusionTool(cfg),
+		tools_products_sm_monitor_devices_connectivity.CreateGet_networks_networkid_sm_devices_deviceid_connectivityTool(cfg),
+		tools_general.CreateGet_organizationsTool(cfg),
+		tools_general_organizations_configure.CreatePost_organizationsTool(cfg),
+		tools_general_organizations_monitor_webhooks_alert_types.CreateGet_organizations_organizationid_webhooks_alerttypesTool(cfg),
+		tools_general_networks_configure_floor_plans.CreateGet_networks_networkid_floorplansTool(cfg),
+		tools_general_networks_configure_floor_plans.CreatePost_networks_networkid_floorplansTool(cfg),
+		tools_products_camera_monitor_analytics_zones_history.CreateGet_devices_serial_camera_analytics_zones_zoneid_historyTool(cfg),
+		tools_products_appliance_configure_traffic_shaping.CreateGet_networks_networkid_appliance_trafficshapingTool(cfg),
+		tools_products_appliance_configure_traffic_shaping.CreatePut_networks_networkid_appliance_trafficshapingTool(cfg),
+		tools_products_appliance_configure_firewall_port_forwarding_rules.CreateGet_networks_networkid_appliance_firewall_portforwardingrulesTool(cfg),
+		tools_products_appliance_configure_firewall_port_forwarding_rules.CreatePut_networks_networkid_appliance_firewall_portforwardingrulesTool(cfg),
+		tools_products_wireless_configure_ssids_device_type_group_policies.CreateGet_networks_networkid_wireless_ssids_number_devicetypegrouppoliciesTool(cfg),
+		tools_products_wireless_configure_ssids_device_type_group_policies.CreatePut_networks_networkid_wireless_ssids_number_devicetypegrouppoliciesTool(cfg),
+		tools_products_appliance_configure_traffic_shaping_uplink_selection.CreateGet_networks_networkid_appliance_trafficshaping_uplinkselectionTool(cfg),
+		tools_products_appliance_configure_traffic_shaping_uplink_selection.CreatePut_networks_networkid_appliance_trafficshaping_uplinkselectionTool(cfg),
+		tools_general_networks_configure_webhooks_webhook_tests.CreatePost_networks_networkid_webhooks_webhooktestsTool(cfg),
+		tools_products_sm_configure_bypass_activation_lock_attempts.CreateGet_networks_networkid_sm_bypassactivationlockattempts_attemptidTool(cfg),
+		tools_products_wireless_configure_bluetooth_settings.CreateGet_networks_networkid_wireless_bluetooth_settingsTool(cfg),
+		tools_products_wireless_configure_bluetooth_settings.CreatePut_networks_networkid_wireless_bluetooth_settingsTool(cfg),
+		tools_general_organizations_monitor_api_requests.CreateGet_organizations_organizationid_apirequestsTool(cfg),
+		tools_general_organizations_configure_admins.CreateDelete_organizations_organizationid_admins_adminidTool(cfg),
+		tools_general_organizations_configure_admins.CreatePut_organizations_organizationid_admins_adminidTool(cfg),
+		tools_products_wireless_monitor_usage_history.CreateGet_networks_networkid_wireless_usagehistoryTool(cfg),
+		tools_general_organizations_monitor_configuration_changes.CreateGet_organizations_organizationid_configurationchangesTool(cfg),
+		tools_products_appliance_configure_firewall_l_3_firewall_rules.CreateGet_networks_networkid_appliance_firewall_l3firewallrulesTool(cfg),
+		tools_products_appliance_configure_firewall_l_3_firewall_rules.CreatePut_networks_networkid_appliance_firewall_l3firewallrulesTool(cfg),
+		tools_products_wireless_monitor_latency_stats.CreateGet_devices_serial_wireless_latencystatsTool(cfg),
+		tools_general_networks_configure_webhooks_http_servers.CreateDelete_networks_networkid_webhooks_httpservers_httpserveridTool(cfg),
+		tools_general_networks_configure_webhooks_http_servers.CreateGet_networks_networkid_webhooks_httpservers_httpserveridTool(cfg),
+		tools_general_networks_configure_webhooks_http_servers.CreatePut_networks_networkid_webhooks_httpservers_httpserveridTool(cfg),
+		tools_products_wireless_monitor_connection_stats.CreateGet_networks_networkid_wireless_connectionstatsTool(cfg),
+		tools_general_devices_monitor_loss_and_latency_history.CreateGet_devices_serial_lossandlatencyhistoryTool(cfg),
+		tools_general_networks_monitor_clients_overview.CreateGet_networks_networkid_clients_overviewTool(cfg),
+		tools_products_sm_monitor_devices_performance_history.CreateGet_networks_networkid_sm_devices_deviceid_performancehistoryTool(cfg),
+		tools_general_organizations_configure.CreatePost_organizations_organizationid_cloneTool(cfg),
+		tools_products_camera_configure_quality_retention_profiles.CreateGet_networks_networkid_camera_qualityretentionprofiles_qualityretentionprofileidTool(cfg),
+		tools_products_camera_configure_quality_retention_profiles.CreatePut_networks_networkid_camera_qualityretentionprofiles_qualityretentionprofileidTool(cfg),
+		tools_products_camera_configure_quality_retention_profiles.CreateDelete_networks_networkid_camera_qualityretentionprofiles_qualityretentionprofileidTool(cfg),
+		tools_products_camera_monitor_analytics_live.CreateGet_devices_serial_camera_analytics_liveTool(cfg),
+		tools_products_wireless_monitor_client_count_history.CreateGet_networks_networkid_wireless_clientcounthistoryTool(cfg),
+		tools_products_wireless_configure_alternate_management_interface.CreateGet_networks_networkid_wireless_alternatemanagementinterfaceTool(cfg),
+		tools_products_wireless_configure_alternate_management_interface.CreatePut_networks_networkid_wireless_alternatemanagementinterfaceTool(cfg),
+		tools_general_networks_monitor_bluetooth_clients.CreateGet_networks_networkid_bluetoothclients_bluetoothclientidTool(cfg),
+		tools_general_organizations_configure.CreatePost_organizations_organizationid_claimTool(cfg),
+		tools_products_appliance_configure_firewall_firewalled_services.CreateGet_networks_networkid_appliance_firewall_firewalledservices_serviceTool(cfg),
+		tools_products_appliance_configure_firewall_firewalled_services.CreatePut_networks_networkid_appliance_firewall_firewalledservices_serviceTool(cfg),
+		tools_products_wireless_monitor_mesh_statuses.CreateGet_networks_networkid_wireless_meshstatusesTool(cfg),
+		tools_products_switch_configure_routing_ospf.CreateGet_networks_networkid_switch_routing_ospfTool(cfg),
+		tools_products_switch_configure_routing_ospf.CreatePut_networks_networkid_switch_routing_ospfTool(cfg),
+		tools_general_organizations_configure_saml_idps.CreateGet_organizations_organizationid_saml_idpsTool(cfg),
+		tools_general_organizations_configure_saml_idps.CreatePost_organizations_organizationid_saml_idpsTool(cfg),
+		tools_products_appliance_configure_traffic_shaping_rules.CreateGet_networks_networkid_appliance_trafficshaping_rulesTool(cfg),
+		tools_products_appliance_configure_traffic_shaping_rules.CreatePut_networks_networkid_appliance_trafficshaping_rulesTool(cfg),
+		tools_general.CreateGet_organizations_organizationid_networksTool(cfg),
+		tools_general_organizations_configure_networks.CreatePost_organizations_organizationid_networksTool(cfg),
+		tools_products_appliance_configure_firewall_inbound_firewall_rules.CreateGet_networks_networkid_appliance_firewall_inboundfirewallrulesTool(cfg),
+		tools_products_appliance_configure_firewall_inbound_firewall_rules.CreatePut_networks_networkid_appliance_firewall_inboundfirewallrulesTool(cfg),
+		tools_general_networks_configure_clients.CreatePost_networks_networkid_clients_provisionTool(cfg),
+		tools_products_sm_monitor_devices_desktop_logs.CreateGet_networks_networkid_sm_devices_deviceid_desktoplogsTool(cfg),
+		tools_products_wireless_monitor_clients_latency_history.CreateGet_networks_networkid_wireless_clients_clientid_latencyhistoryTool(cfg),
+		tools_products_appliance_configure_warm_spare.CreatePost_networks_networkid_appliance_warmspare_swapTool(cfg),
+		tools_general_organizations_configure_saml.CreatePut_organizations_organizationid_samlTool(cfg),
+		tools_general_organizations_configure_saml.CreateGet_organizations_organizationid_samlTool(cfg),
+		tools_products_sm_configure_devices.CreatePost_networks_networkid_sm_devices_wipeTool(cfg),
+		tools_products_appliance_configure_vpn_third_party_vpn_peers.CreateGet_organizations_organizationid_appliance_vpn_thirdpartyvpnpeersTool(cfg),
+		tools_products_appliance_configure_vpn_third_party_vpn_peers.CreatePut_organizations_organizationid_appliance_vpn_thirdpartyvpnpeersTool(cfg),
+		tools_products_switch_configure_stacks_routing_static_routes.CreateDelete_networks_networkid_switch_stacks_switchstackid_routing_staticroutes_staticrouteidTool(cfg),
+		tools_products_switch_configure_stacks_routing_static_routes.CreateGet_networks_networkid_switch_stacks_switchstackid_routing_staticroutes_staticrouteidTool(cfg),
+		tools_products_switch_configure_stacks_routing_static_routes.CreatePut_networks_networkid_switch_stacks_switchstackid_routing_staticroutes_staticrouteidTool(cfg),
+		tools_products_cellular_gateway_configure_subnet_pool.CreateGet_networks_networkid_cellulargateway_subnetpoolTool(cfg),
+		tools_products_cellular_gateway_configure_subnet_pool.CreatePut_networks_networkid_cellulargateway_subnetpoolTool(cfg),
+		tools_products_switch_configure_storm_control.CreateGet_networks_networkid_switch_stormcontrolTool(cfg),
+		tools_products_switch_configure_storm_control.CreatePut_networks_networkid_switch_stormcontrolTool(cfg),
+		tools_products_cellular_gateway_monitor_uplink_statuses.CreateGet_organizations_organizationid_cellulargateway_uplink_statusesTool(cfg),
+		tools_general_networks_configure_meraki_auth_users.CreatePost_networks_networkid_merakiauthusersTool(cfg),
+		tools_general_networks_configure_meraki_auth_users.CreateGet_networks_networkid_merakiauthusersTool(cfg),
+		tools_products_switch_configure_qos_rules_order.CreateGet_networks_networkid_switch_qosrules_orderTool(cfg),
+		tools_products_switch_configure_qos_rules_order.CreatePut_networks_networkid_switch_qosrules_orderTool(cfg),
+		tools_products_camera_configure_sense.CreateGet_devices_serial_camera_senseTool(cfg),
+		tools_products_camera_configure_sense.CreatePut_devices_serial_camera_senseTool(cfg),
+		tools_products_switch_configure_routing_multicast.CreateGet_networks_networkid_switch_routing_multicastTool(cfg),
+		tools_products_switch_configure_routing_multicast.CreatePut_networks_networkid_switch_routing_multicastTool(cfg),
+		tools_products_switch_configure_settings.CreatePut_networks_networkid_switch_settingsTool(cfg),
+		tools_products_switch_configure_settings.CreateGet_networks_networkid_switch_settingsTool(cfg),
+		tools_general_networks_configure_traffic_shaping_dscp_tagging_options.CreateGet_networks_networkid_trafficshaping_dscptaggingoptionsTool(cfg),
+		tools_products_appliance_configure_firewall_firewalled_services.CreateGet_networks_networkid_appliance_firewall_firewalledservicesTool(cfg),
+		tools_products_camera_monitor_analytics_recent.CreateGet_devices_serial_camera_analytics_recentTool(cfg),
+		tools_products_appliance_configure_ports.CreateGet_networks_networkid_appliance_ports_portidTool(cfg),
+		tools_products_appliance_configure_ports.CreatePut_networks_networkid_appliance_ports_portidTool(cfg),
+		tools_products_appliance_monitor_security_events.CreateGet_networks_networkid_appliance_security_eventsTool(cfg),
+		tools_products_cellular_gateway_configure_uplink.CreateGet_networks_networkid_cellulargateway_uplinkTool(cfg),
+		tools_products_cellular_gateway_configure_uplink.CreatePut_networks_networkid_cellulargateway_uplinkTool(cfg),
+		tools_products_camera_configure_quality_retention_profiles.CreateGet_networks_networkid_camera_qualityretentionprofilesTool(cfg),
+		tools_products_camera_configure_quality_retention_profiles.CreatePost_networks_networkid_camera_qualityretentionprofilesTool(cfg),
+		tools_products_wireless_configure_ssids_traffic_shaping_rules.CreateGet_networks_networkid_wireless_ssids_number_trafficshaping_rulesTool(cfg),
+		tools_products_wireless_configure_ssids_traffic_shaping_rules.CreatePut_networks_networkid_wireless_ssids_number_trafficshaping_rulesTool(cfg),
+		tools_products_appliance_configure_firewall_one_to_many_nat_rules.CreateGet_networks_networkid_appliance_firewall_onetomanynatrulesTool(cfg),
+		tools_products_appliance_configure_firewall_one_to_many_nat_rules.CreatePut_networks_networkid_appliance_firewall_onetomanynatrulesTool(cfg),
+		tools_products_switch_configure_dhcp_server_policy.CreateGet_networks_networkid_switch_dhcpserverpolicyTool(cfg),
+		tools_products_switch_configure_dhcp_server_policy.CreatePut_networks_networkid_switch_dhcpserverpolicyTool(cfg),
+		tools_products_sm_monitor_devices_device_command_logs.CreateGet_networks_networkid_sm_devices_deviceid_devicecommandlogsTool(cfg),
+		tools_products_insight_configure_monitored_media_servers.CreatePost_organizations_organizationid_insight_monitoredmediaserversTool(cfg),
+		tools_products_insight_configure_monitored_media_servers.CreateGet_organizations_organizationid_insight_monitoredmediaserversTool(cfg),
+		tools_products_wireless_monitor_devices_connection_stats.CreateGet_networks_networkid_wireless_devices_connectionstatsTool(cfg),
+		tools_products_wireless_monitor_clients_latency_stats.CreateGet_networks_networkid_wireless_clients_latencystatsTool(cfg),
+		tools_products_switch_configure_config_templates_profiles_ports.CreateGet_organizations_organizationid_configtemplates_configtemplateid_switch_profiles_profileid_portsTool(cfg),
+		tools_products_appliance_configure_static_routes.CreateGet_networks_networkid_appliance_staticroutesTool(cfg),
+		tools_products_appliance_configure_static_routes.CreatePost_networks_networkid_appliance_staticroutesTool(cfg),
+		tools_products_sm_configure_devices_restrictions.CreateGet_networks_networkid_sm_devices_deviceid_restrictionsTool(cfg),
+		tools_general_organizations_configure_licenses.CreatePost_organizations_organizationid_licenses_renewseatsTool(cfg),
+		tools_products_wireless_configure_bluetooth_settings.CreateGet_devices_serial_wireless_bluetooth_settingsTool(cfg),
+		tools_products_wireless_configure_bluetooth_settings.CreatePut_devices_serial_wireless_bluetooth_settingsTool(cfg),
+		tools_products_wireless_configure_radio_settings.CreateGet_devices_serial_wireless_radio_settingsTool(cfg),
+		tools_products_wireless_configure_radio_settings.CreatePut_devices_serial_wireless_radio_settingsTool(cfg),
+		tools_general_networks_configure.CreateDelete_networks_networkidTool(cfg),
+		tools_general_networks_configure.CreateGet_networks_networkidTool(cfg),
+		tools_general_networks_configure.CreatePut_networks_networkidTool(cfg),
+		tools_products_camera_configure_schedules.CreateGet_networks_networkid_camera_schedulesTool(cfg),
+		tools_products_sm_configure_user_access_devices.CreateGet_networks_networkid_sm_useraccessdevicesTool(cfg),
+		tools_general_networks_configure_floor_plans.CreateDelete_networks_networkid_floorplans_floorplanidTool(cfg),
+		tools_general_networks_configure_floor_plans.CreateGet_networks_networkid_floorplans_floorplanidTool(cfg),
+		tools_general_networks_configure_floor_plans.CreatePut_networks_networkid_floorplans_floorplanidTool(cfg),
+		tools_products_switch_configure_stacks.CreateGet_networks_networkid_switch_stacksTool(cfg),
+		tools_products_switch_configure_stacks.CreatePost_networks_networkid_switch_stacksTool(cfg),
+		tools_products_switch_configure_stacks.CreatePost_networks_networkid_switch_stacks_switchstackid_addTool(cfg),
+		tools_products_switch_configure_qos_rules.CreateDelete_networks_networkid_switch_qosrules_qosruleidTool(cfg),
+		tools_products_switch_configure_qos_rules.CreateGet_networks_networkid_switch_qosrules_qosruleidTool(cfg),
+		tools_products_switch_configure_qos_rules.CreatePut_networks_networkid_switch_qosrules_qosruleidTool(cfg),
+		tools_products_wireless_monitor_latency_stats.CreateGet_networks_networkid_wireless_latencystatsTool(cfg),
+		tools_products_sm_configure_devices_wlan_lists.CreateGet_networks_networkid_sm_devices_deviceid_wlanlistsTool(cfg),
+		tools_products_camera_configure_sense_object_detection_models.CreateGet_devices_serial_camera_sense_objectdetectionmodelsTool(cfg),
+		tools_products_cellular_gateway_configure_connectivity_monitoring_destinations.CreateGet_networks_networkid_cellulargateway_connectivitymonitoringdestinationsTool(cfg),
+		tools_products_cellular_gateway_configure_connectivity_monitoring_destinations.CreatePut_networks_networkid_cellulargateway_connectivitymonitoringdestinationsTool(cfg),
+		tools_products_sm_configure_devices.CreatePost_networks_networkid_sm_devices_moveTool(cfg),
+		tools_general_networks_configure_devices.CreateGet_networks_networkid_devicesTool(cfg),
+		tools_products_switch_configure_routing_interfaces.CreateGet_devices_serial_switch_routing_interfacesTool(cfg),
+		tools_products_switch_configure_routing_interfaces.CreatePost_devices_serial_switch_routing_interfacesTool(cfg),
+		tools_products_camera_configure_video_link.CreateGet_devices_serial_camera_videolinkTool(cfg),
+		tools_products_appliance_configure_static_routes.CreateDelete_networks_networkid_appliance_staticroutes_staticrouteidTool(cfg),
+		tools_products_appliance_configure_static_routes.CreateGet_networks_networkid_appliance_staticroutes_staticrouteidTool(cfg),
+		tools_products_appliance_configure_static_routes.CreatePut_networks_networkid_appliance_staticroutes_staticrouteidTool(cfg),
+		tools_products_insight_configure_monitored_media_servers.CreateGet_organizations_organizationid_insight_monitoredmediaservers_monitoredmediaserveridTool(cfg),
+		tools_products_insight_configure_monitored_media_servers.CreatePut_organizations_organizationid_insight_monitoredmediaservers_monitoredmediaserveridTool(cfg),
+		tools_products_insight_configure_monitored_media_servers.CreateDelete_organizations_organizationid_insight_monitoredmediaservers_monitoredmediaserveridTool(cfg),
+		tools_products_appliance_configure_firewall_cellular_firewall_rules.CreateGet_networks_networkid_appliance_firewall_cellularfirewallrulesTool(cfg),
+		tools_products_appliance_configure_firewall_cellular_firewall_rules.CreatePut_networks_networkid_appliance_firewall_cellularfirewallrulesTool(cfg),
+		tools_general_networks_configure_mqtt_brokers.CreateDelete_networks_networkid_mqttbrokers_mqttbrokeridTool(cfg),
+		tools_general_networks_configure_mqtt_brokers.CreateGet_networks_networkid_mqttbrokers_mqttbrokeridTool(cfg),
+		tools_general_networks_configure_mqtt_brokers.CreatePut_networks_networkid_mqttbrokers_mqttbrokeridTool(cfg),
+		tools_general_organizations_configure_licenses.CreateGet_organizations_organizationid_licensesTool(cfg),
+		tools_products_wireless_configure_ssids_bonjour_forwarding.CreateGet_networks_networkid_wireless_ssids_number_bonjourforwardingTool(cfg),
+		tools_products_wireless_configure_ssids_bonjour_forwarding.CreatePut_networks_networkid_wireless_ssids_number_bonjourforwardingTool(cfg),
+		tools_products_appliance_configure_content_filtering_categories.CreateGet_networks_networkid_appliance_contentfiltering_categoriesTool(cfg),
+		tools_general_organizations_configure_config_templates.CreateGet_organizations_organizationid_configtemplatesTool(cfg),
+		tools_general_organizations_configure_config_templates.CreatePost_organizations_organizationid_configtemplatesTool(cfg),
+		tools_products_appliance_monitor_vpn_stats.CreateGet_organizations_organizationid_appliance_vpn_statsTool(cfg),
+		tools_products_wireless_configure_billing.CreateGet_networks_networkid_wireless_billingTool(cfg),
+		tools_products_wireless_configure_billing.CreatePut_networks_networkid_wireless_billingTool(cfg),
+		tools_products_switch_configure_stacks_routing_interfaces.CreateGet_networks_networkid_switch_stacks_switchstackid_routing_interfacesTool(cfg),
+		tools_products_switch_configure_stacks_routing_interfaces.CreatePost_networks_networkid_switch_stacks_switchstackid_routing_interfacesTool(cfg),
+		tools_products_cellular_gateway_configure_port_forwarding_rules.CreateGet_devices_serial_cellulargateway_portforwardingrulesTool(cfg),
+		tools_products_cellular_gateway_configure_port_forwarding_rules.CreatePut_devices_serial_cellulargateway_portforwardingrulesTool(cfg),
+		tools_products_switch_monitor_ports_statuses_packets.CreateGet_devices_serial_switch_ports_statuses_packetsTool(cfg),
+		tools_general_networks_configure_pii_sm_devices_for_key.CreateGet_networks_networkid_pii_smdevicesforkeyTool(cfg),
+		tools_products_wireless_configure_ssids_identity_psks.CreateGet_networks_networkid_wireless_ssids_number_identitypsksTool(cfg),
+		tools_products_wireless_configure_ssids_identity_psks.CreatePost_networks_networkid_wireless_ssids_number_identitypsksTool(cfg),
+		tools_products_wireless_monitor_clients_connection_stats.CreateGet_networks_networkid_wireless_clients_clientid_connectionstatsTool(cfg),
+		tools_products_appliance_configure_vpn_bgp.CreateGet_networks_networkid_appliance_vpn_bgpTool(cfg),
+		tools_products_appliance_configure_vpn_bgp.CreatePut_networks_networkid_appliance_vpn_bgpTool(cfg),
+		tools_general_organizations_configure_networks.CreatePost_organizations_organizationid_networks_combineTool(cfg),
+		tools_general_networks_configure_mqtt_brokers.CreateGet_networks_networkid_mqttbrokersTool(cfg),
+		tools_general_networks_configure_mqtt_brokers.CreatePost_networks_networkid_mqttbrokersTool(cfg),
+		tools_general_networks_configure.CreatePost_networks_networkid_unbindTool(cfg),
+		tools_products_sm_configure_vpp_accounts.CreateGet_organizations_organizationid_sm_vppaccountsTool(cfg),
+		tools_products_switch_configure_routing_multicast_rendezvous_points.CreateGet_networks_networkid_switch_routing_multicast_rendezvouspointsTool(cfg),
+		tools_products_switch_configure_routing_multicast_rendezvous_points.CreatePost_networks_networkid_switch_routing_multicast_rendezvouspointsTool(cfg),
+		tools_products_switch_configure_devices.CreatePost_organizations_organizationid_switch_devices_cloneTool(cfg),
+		tools_general_networks_configure_traffic_shaping_application_categories.CreateGet_networks_networkid_trafficshaping_applicationcategoriesTool(cfg),
+		tools_products_switch_live_tools_ports.CreatePost_devices_serial_switch_ports_cycleTool(cfg),
+		tools_general_organizations_configure_branding_policies.CreateDelete_organizations_organizationid_brandingpolicies_brandingpolicyidTool(cfg),
+		tools_general_organizations_configure_branding_policies.CreateGet_organizations_organizationid_brandingpolicies_brandingpolicyidTool(cfg),
+		tools_general_organizations_configure_branding_policies.CreatePut_organizations_organizationid_brandingpolicies_brandingpolicyidTool(cfg),
+		tools_general_organizations_configure_branding_policies.CreatePost_organizations_organizationid_brandingpoliciesTool(cfg),
+		tools_general_organizations_configure_branding_policies.CreateGet_organizations_organizationid_brandingpoliciesTool(cfg),
+		tools_general_networks_monitor_clients_usage_histories.CreateGet_networks_networkid_clients_usagehistoriesTool(cfg),
+		tools_products_appliance_monitor_performance.CreateGet_devices_serial_appliance_performanceTool(cfg),
+		tools_products_wireless_configure_ssids_vpn.CreateGet_networks_networkid_wireless_ssids_number_vpnTool(cfg),
+		tools_products_wireless_configure_ssids_vpn.CreatePut_networks_networkid_wireless_ssids_number_vpnTool(cfg),
+		tools_general_organizations_configure_saml_roles.CreatePut_organizations_organizationid_samlroles_samlroleidTool(cfg),
+		tools_general_organizations_configure_saml_roles.CreateDelete_organizations_organizationid_samlroles_samlroleidTool(cfg),
+		tools_general_organizations_configure_saml_roles.CreateGet_organizations_organizationid_samlroles_samlroleidTool(cfg),
+		tools_products_appliance_configure_security_malware.CreateGet_networks_networkid_appliance_security_malwareTool(cfg),
+		tools_products_appliance_configure_security_malware.CreatePut_networks_networkid_appliance_security_malwareTool(cfg),
+		tools_general_organizations_configure_licenses.CreatePost_organizations_organizationid_licenses_moveseatsTool(cfg),
+		tools_products_appliance_configure_warm_spare.CreatePut_networks_networkid_appliance_warmspareTool(cfg),
+		tools_products_appliance_configure_warm_spare.CreateGet_networks_networkid_appliance_warmspareTool(cfg),
+		tools_products_sm_configure_devices_certs.CreateGet_networks_networkid_sm_devices_deviceid_certsTool(cfg),
+		tools_products_sm_configure_devices_softwares.CreateGet_networks_networkid_sm_devices_deviceid_softwaresTool(cfg),
+		tools_products_wireless_configure_ssids.CreateGet_networks_networkid_wireless_ssidsTool(cfg),
+		tools_general_organizations_configure_login_security.CreateGet_organizations_organizationid_loginsecurityTool(cfg),
+		tools_general_organizations_configure_login_security.CreatePut_organizations_organizationid_loginsecurityTool(cfg),
+		tools_products_wireless_monitor_air_marshal.CreateGet_networks_networkid_wireless_airmarshalTool(cfg),
+		tools_products_camera_configure_quality_and_retention.CreateGet_devices_serial_camera_qualityandretentionTool(cfg),
+		tools_products_camera_configure_quality_and_retention.CreatePut_devices_serial_camera_qualityandretentionTool(cfg),
+		tools_products_appliance_monitor_dhcp_subnets.CreateGet_devices_serial_appliance_dhcp_subnetsTool(cfg),
+		tools_general_networks_configure_group_policies.CreateGet_networks_networkid_grouppoliciesTool(cfg),
+		tools_general_networks_configure_group_policies.CreatePost_networks_networkid_grouppoliciesTool(cfg),
+		tools_products_appliance_configure_security_intrusion.CreateGet_organizations_organizationid_appliance_security_intrusionTool(cfg),
+		tools_products_appliance_configure_security_intrusion.CreatePut_organizations_organizationid_appliance_security_intrusionTool(cfg),
+		tools_products_appliance_configure_settings.CreateGet_networks_networkid_appliance_settingsTool(cfg),
+		tools_general_organizations_configure_snmp.CreateGet_organizations_organizationid_snmpTool(cfg),
+		tools_general_organizations_configure_snmp.CreatePut_organizations_organizationid_snmpTool(cfg),
+		tools_products_appliance_configure_firewall_l_7_firewall_rules_application_categories.CreateGet_networks_networkid_appliance_firewall_l7firewallrules_applicationcategoriesTool(cfg),
+		tools_products_sm_configure_devices_fields.CreatePut_networks_networkid_sm_devices_fieldsTool(cfg),
+		tools_products_wireless_monitor_latency_history.CreateGet_networks_networkid_wireless_latencyhistoryTool(cfg),
+		tools_products_sm_configure_devices.CreatePost_networks_networkid_sm_devices_modifytagsTool(cfg),
+		tools_general_networks_configure_firmware_upgrades.CreateGet_networks_networkid_firmwareupgradesTool(cfg),
+		tools_general_networks_configure_firmware_upgrades.CreatePut_networks_networkid_firmwareupgradesTool(cfg),
+		tools_products_appliance_configure_ports.CreateGet_networks_networkid_appliance_portsTool(cfg),
+		tools_general_devices_configure_management_interface.CreatePut_devices_serial_managementinterfaceTool(cfg),
+		tools_general_devices_configure_management_interface.CreateGet_devices_serial_managementinterfaceTool(cfg),
+		tools_products_appliance_configure_traffic_shaping_custom_performance_classes.CreateGet_networks_networkid_appliance_trafficshaping_customperformanceclasses_customperformanceclassidTool(cfg),
+		tools_products_appliance_configure_traffic_shaping_custom_performance_classes.CreatePut_networks_networkid_appliance_trafficshaping_customperformanceclasses_customperformanceclassidTool(cfg),
+		tools_products_appliance_configure_traffic_shaping_custom_performance_classes.CreateDelete_networks_networkid_appliance_trafficshaping_customperformanceclasses_customperformanceclassidTool(cfg),
+		tools_general_devices_live_tools.CreatePost_devices_serial_blinkledsTool(cfg),
+		tools_products_sm_configure_devices.CreatePost_networks_networkid_sm_devices_lockTool(cfg),
+		tools_products_appliance_configure_single_lan.CreateGet_networks_networkid_appliance_singlelanTool(cfg),
+		tools_products_appliance_configure_single_lan.CreatePut_networks_networkid_appliance_singlelanTool(cfg),
+		tools_products_sm_configure_devices.CreateGet_networks_networkid_sm_devicesTool(cfg),
+		tools_products_sm_configure_devices_network_adapters.CreateGet_networks_networkid_sm_devices_deviceid_networkadaptersTool(cfg),
+		tools_products_switch_monitor_ports_statuses.CreateGet_devices_serial_switch_ports_statusesTool(cfg),
+		tools_general_networks_configure_firmware_upgrades_rollbacks.CreatePost_networks_networkid_firmwareupgrades_rollbacksTool(cfg),
+		tools_general_networks_configure_pii_requests.CreateGet_networks_networkid_pii_requestsTool(cfg),
+		tools_general_networks_configure_pii_requests.CreatePost_networks_networkid_pii_requestsTool(cfg),
+		tools_products_appliance_monitor_security_events.CreateGet_organizations_organizationid_appliance_security_eventsTool(cfg),
+		tools_general_organizations_configure_inventory_devices.CreateGet_organizations_organizationid_inventorydevicesTool(cfg),
+		tools_products_wireless_configure_ssids_splash_settings.CreateGet_networks_networkid_wireless_ssids_number_splash_settingsTool(cfg),
+		tools_products_wireless_configure_ssids_splash_settings.CreatePut_networks_networkid_wireless_ssids_number_splash_settingsTool(cfg),
+		tools_products_insight_configure_applications.CreateGet_organizations_organization_id_insight_applicationsTool(cfg),
+		tools_products_switch_configure_stacks_routing_interfaces_dhcp.CreateGet_networks_networkid_switch_stacks_switchstackid_routing_interfaces_interfaceid_dhcpTool(cfg),
+		tools_products_switch_configure_stacks_routing_interfaces_dhcp.CreatePut_networks_networkid_switch_stacks_switchstackid_routing_interfaces_interfaceid_dhcpTool(cfg),
+		tools_products_appliance_configure_content_filtering.CreatePut_networks_networkid_appliance_contentfilteringTool(cfg),
+		tools_products_appliance_configure_content_filtering.CreateGet_networks_networkid_appliance_contentfilteringTool(cfg),
+		tools_products_sm_configure_profiles.CreateGet_networks_networkid_sm_profilesTool(cfg),
+		tools_general_networks_monitor_clients_usage_history.CreateGet_networks_networkid_clients_clientid_usagehistoryTool(cfg),
+		tools_products_switch_configure_routing_interfaces.CreateGet_devices_serial_switch_routing_interfaces_interfaceidTool(cfg),
+		tools_products_switch_configure_routing_interfaces.CreatePut_devices_serial_switch_routing_interfaces_interfaceidTool(cfg),
+		tools_products_switch_configure_routing_interfaces.CreateDelete_devices_serial_switch_routing_interfaces_interfaceidTool(cfg),
+		tools_products_sm_configure_apns_cert.CreateGet_organizations_organizationid_sm_apnscertTool(cfg),
+		tools_products_wireless_monitor_connection_stats.CreateGet_devices_serial_wireless_connectionstatsTool(cfg),
+		tools_general_networks_configure_devices.CreatePost_networks_networkid_devices_claimTool(cfg),
+		tools_products_switch_configure_ports.CreateGet_devices_serial_switch_ports_portidTool(cfg),
+		tools_products_switch_configure_ports.CreatePut_devices_serial_switch_ports_portidTool(cfg),
+		tools_products_switch_configure_stacks_routing_interfaces.CreateDelete_networks_networkid_switch_stacks_switchstackid_routing_interfaces_interfaceidTool(cfg),
+		tools_products_switch_configure_stacks_routing_interfaces.CreateGet_networks_networkid_switch_stacks_switchstackid_routing_interfaces_interfaceidTool(cfg),
+		tools_products_switch_configure_stacks_routing_interfaces.CreatePut_networks_networkid_switch_stacks_switchstackid_routing_interfaces_interfaceidTool(cfg),
+		tools_general_devices_monitor_lldp_cdp.CreateGet_devices_serial_lldpcdpTool(cfg),
+		tools_products_sm_configure_users.CreateGet_networks_networkid_sm_usersTool(cfg),
+		tools_products_camera_monitor.CreatePost_devices_serial_camera_generatesnapshotTool(cfg),
+		tools_products_camera_configure_video_settings.CreateGet_devices_serial_camera_video_settingsTool(cfg),
+		tools_products_camera_configure_video_settings.CreatePut_devices_serial_camera_video_settingsTool(cfg),
+		tools_general_organizations_configure_saml_roles.CreateGet_organizations_organizationid_samlrolesTool(cfg),
+		tools_general_organizations_configure_saml_roles.CreatePost_organizations_organizationid_samlrolesTool(cfg),
+		tools_general_networks_configure.CreatePost_networks_networkid_splitTool(cfg),
+		tools_products_camera_monitor_analytics_zones.CreateGet_devices_serial_camera_analytics_zonesTool(cfg),
+		tools_general_networks_configure_pii_pii_keys.CreateGet_networks_networkid_pii_piikeysTool(cfg),
+		tools_products_appliance_configure_vlans.CreateGet_networks_networkid_appliance_vlansTool(cfg),
+		tools_products_appliance_configure_vlans.CreatePost_networks_networkid_appliance_vlansTool(cfg),
+		tools_products_switch_configure_mtu.CreatePut_networks_networkid_switch_mtuTool(cfg),
+		tools_products_switch_configure_mtu.CreateGet_networks_networkid_switch_mtuTool(cfg),
+		tools_products_wireless_monitor_clients_connectivity_events.CreateGet_networks_networkid_wireless_clients_clientid_connectivityeventsTool(cfg),
+		tools_products_appliance_configure_traffic_shaping_custom_performance_classes.CreateGet_networks_networkid_appliance_trafficshaping_customperformanceclassesTool(cfg),
+		tools_products_appliance_configure_traffic_shaping_custom_performance_classes.CreatePost_networks_networkid_appliance_trafficshaping_customperformanceclassesTool(cfg),
+		tools_products_wireless_monitor_clients_connection_stats.CreateGet_networks_networkid_wireless_clients_connectionstatsTool(cfg),
+		tools_products_sm_configure_devices.CreatePost_networks_networkid_sm_devices_deviceid_refreshdetailsTool(cfg),
+		tools_general_networks_configure_devices.CreatePost_networks_networkid_devices_removeTool(cfg),
+		tools_products_switch_configure_stacks_routing_static_routes.CreatePost_networks_networkid_switch_stacks_switchstackid_routing_staticroutesTool(cfg),
+		tools_products_switch_configure_stacks_routing_static_routes.CreateGet_networks_networkid_switch_stacks_switchstackid_routing_staticroutesTool(cfg),
+		tools_general_networks_configure_alerts_settings.CreateGet_networks_networkid_alerts_settingsTool(cfg),
+		tools_general_networks_configure_alerts_settings.CreatePut_networks_networkid_alerts_settingsTool(cfg),
+		tools_products_wireless_monitor_channel_utilization_history.CreateGet_networks_networkid_wireless_channelutilizationhistoryTool(cfg),
+		tools_general_organizations_monitor_uplinks_statuses.CreateGet_organizations_organizationid_uplinks_statusesTool(cfg),
+		tools_products_appliance_monitor_uplink_statuses.CreateGet_organizations_organizationid_appliance_uplink_statusesTool(cfg),
+		tools_products_wireless_monitor_status.CreateGet_devices_serial_wireless_statusTool(cfg),
+		tools_products_sm_configure_devices_device_profiles.CreateGet_networks_networkid_sm_devices_deviceid_deviceprofilesTool(cfg),
+		tools_general_organizations_configure_action_batches.CreateGet_organizations_organizationid_actionbatchesTool(cfg),
+		tools_general_organizations_configure_action_batches.CreatePost_organizations_organizationid_actionbatchesTool(cfg),
+		tools_products_switch_configure_link_aggregations.CreateGet_networks_networkid_switch_linkaggregationsTool(cfg),
+		tools_products_switch_configure_link_aggregations.CreatePost_networks_networkid_switch_linkaggregationsTool(cfg),
+		tools_products_appliance_monitor_clients_security_events.CreateGet_networks_networkid_appliance_clients_clientid_security_eventsTool(cfg),
+		tools_products_switch_configure_ports.CreateGet_devices_serial_switch_portsTool(cfg),
+		tools_products_switch_configure_stacks.CreatePost_networks_networkid_switch_stacks_switchstackid_removeTool(cfg),
+		tools_products_sm_configure_target_groups.CreateGet_networks_networkid_sm_targetgroupsTool(cfg),
+		tools_products_sm_configure_target_groups.CreatePost_networks_networkid_sm_targetgroupsTool(cfg),
+		tools_general_organizations_monitor_devices_uplinks_loss_and_latency.CreateGet_organizations_organizationid_devices_uplinkslossandlatencyTool(cfg),
+		tools_general_networks_configure_traffic_analysis.CreateGet_networks_networkid_trafficanalysisTool(cfg),
+		tools_general_networks_configure_traffic_analysis.CreatePut_networks_networkid_trafficanalysisTool(cfg),
+		tools_products_wireless_configure_rf_profiles.CreateGet_networks_networkid_wireless_rfprofilesTool(cfg),
+		tools_products_wireless_configure_rf_profiles.CreatePost_networks_networkid_wireless_rfprofilesTool(cfg),
+		tools_products_sm_configure_vpp_accounts.CreateGet_organizations_organizationid_sm_vppaccounts_vppaccountidTool(cfg),
+		tools_products_wireless_monitor_devices_latency_stats.CreateGet_networks_networkid_wireless_devices_latencystatsTool(cfg),
+		tools_products_appliance_monitor_vpn_statuses.CreateGet_organizations_organizationid_appliance_vpn_statusesTool(cfg),
+		tools_general_organizations_monitor_api_requests_overview.CreateGet_organizations_organizationid_apirequests_overviewTool(cfg),
+		tools_general_devices_live_tools.CreatePost_devices_serial_rebootTool(cfg),
+		tools_general_organizations_configure_licenses.CreateGet_organizations_organizationid_licenses_licenseidTool(cfg),
+		tools_general_organizations_configure_licenses.CreatePut_organizations_organizationid_licenses_licenseidTool(cfg),
+		tools_products_switch_configure_routing_static_routes.CreateGet_devices_serial_switch_routing_staticroutesTool(cfg),
+		tools_products_switch_configure_routing_static_routes.CreatePost_devices_serial_switch_routing_staticroutesTool(cfg),
+		tools_general_organizations_configure_inventory_devices.CreateGet_organizations_organizationid_inventorydevices_serialTool(cfg),
+		tools_products_appliance_configure_vlans_settings.CreateGet_networks_networkid_appliance_vlans_settingsTool(cfg),
+		tools_products_appliance_configure_vlans_settings.CreatePut_networks_networkid_appliance_vlans_settingsTool(cfg),
+		tools_products_sm_configure_devices_security_centers.CreateGet_networks_networkid_sm_devices_deviceid_securitycentersTool(cfg),
+		tools_general_networks_configure_netflow.CreateGet_networks_networkid_netflowTool(cfg),
+		tools_general_networks_configure_netflow.CreatePut_networks_networkid_netflowTool(cfg),
+		tools_general_organizations_monitor_licenses_overview.CreateGet_organizations_organizationid_licenses_overviewTool(cfg),
+		tools_general_networks_monitor_bluetooth_clients.CreateGet_networks_networkid_bluetoothclientsTool(cfg),
+		tools_general_networks_configure_syslog_servers.CreateGet_networks_networkid_syslogserversTool(cfg),
+		tools_general_networks_configure_syslog_servers.CreatePut_networks_networkid_syslogserversTool(cfg),
+		tools_products_switch_configure_routing_multicast_rendezvous_points.CreateDelete_networks_networkid_switch_routing_multicast_rendezvouspoints_rendezvouspointidTool(cfg),
+		tools_products_switch_configure_routing_multicast_rendezvous_points.CreateGet_networks_networkid_switch_routing_multicast_rendezvouspoints_rendezvouspointidTool(cfg),
+		tools_products_switch_configure_routing_multicast_rendezvous_points.CreatePut_networks_networkid_switch_routing_multicast_rendezvouspoints_rendezvouspointidTool(cfg),
+		tools_products_switch_configure_stp.CreateGet_networks_networkid_switch_stpTool(cfg),
+		tools_products_switch_configure_stp.CreatePut_networks_networkid_switch_stpTool(cfg),
+		tools_products_switch_configure_config_templates_profiles_ports.CreateGet_organizations_organizationid_configtemplates_configtemplateid_switch_profiles_profileid_ports_portidTool(cfg),
+		tools_products_switch_configure_config_templates_profiles_ports.CreatePut_organizations_organizationid_configtemplates_configtemplateid_switch_profiles_profileid_ports_portidTool(cfg),
+		tools_products_switch_configure_access_control_lists.CreateGet_networks_networkid_switch_accesscontrollistsTool(cfg),
+		tools_products_switch_configure_access_control_lists.CreatePut_networks_networkid_switch_accesscontrollistsTool(cfg),
+		tools_general_organizations_monitor_devices_statuses.CreateGet_organizations_organizationid_devices_statusesTool(cfg),
+		tools_general_organizations_configure_saml_idps.CreateDelete_organizations_organizationid_saml_idps_idpidTool(cfg),
+		tools_general_organizations_configure_saml_idps.CreateGet_organizations_organizationid_saml_idps_idpidTool(cfg),
+		tools_general_organizations_configure_saml_idps.CreatePut_organizations_organizationid_saml_idps_idpidTool(cfg),
+		tools_general_networks_configure.CreatePost_networks_networkid_bindTool(cfg),
+		tools_general_networks_monitor_events_event_types.CreateGet_networks_networkid_events_eventtypesTool(cfg),
+		tools_products_appliance_configure_firewall_l_7_firewall_rules.CreateGet_networks_networkid_appliance_firewall_l7firewallrulesTool(cfg),
+		tools_products_appliance_configure_firewall_l_7_firewall_rules.CreatePut_networks_networkid_appliance_firewall_l7firewallrulesTool(cfg),
+		tools_products_switch_configure_link_aggregations.CreateDelete_networks_networkid_switch_linkaggregations_linkaggregationidTool(cfg),
+		tools_products_switch_configure_link_aggregations.CreatePut_networks_networkid_switch_linkaggregations_linkaggregationidTool(cfg),
+		tools_general_networks_configure_group_policies.CreateDelete_networks_networkid_grouppolicies_grouppolicyidTool(cfg),
+		tools_general_networks_configure_group_policies.CreateGet_networks_networkid_grouppolicies_grouppolicyidTool(cfg),
+		tools_general_networks_configure_group_policies.CreatePut_networks_networkid_grouppolicies_grouppolicyidTool(cfg),
+		tools_products_camera_monitor_analytics_overview.CreateGet_devices_serial_camera_analytics_overviewTool(cfg),
+		tools_products_appliance_configure_vlans.CreateDelete_networks_networkid_appliance_vlans_vlanidTool(cfg),
+		tools_products_appliance_configure_vlans.CreateGet_networks_networkid_appliance_vlans_vlanidTool(cfg),
+		tools_products_appliance_configure_vlans.CreatePut_networks_networkid_appliance_vlans_vlanidTool(cfg),
+		tools_products_appliance_configure_vpn_vpn_firewall_rules.CreateGet_organizations_organizationid_appliance_vpn_vpnfirewallrulesTool(cfg),
+		tools_products_appliance_configure_vpn_vpn_firewall_rules.CreatePut_organizations_organizationid_appliance_vpn_vpnfirewallrulesTool(cfg),
+		tools_products_switch_configure_access_policies.CreatePut_networks_networkid_switch_accesspolicies_accesspolicynumberTool(cfg),
+		tools_products_switch_configure_access_policies.CreateDelete_networks_networkid_switch_accesspolicies_accesspolicynumberTool(cfg),
+		tools_products_switch_configure_access_policies.CreateGet_networks_networkid_switch_accesspolicies_accesspolicynumberTool(cfg),
+		tools_products_wireless_configure_ssids.CreateGet_networks_networkid_wireless_ssids_numberTool(cfg),
+		tools_products_wireless_configure_ssids.CreatePut_networks_networkid_wireless_ssids_numberTool(cfg),
+		tools_products_switch_configure_port_schedules.CreateDelete_networks_networkid_switch_portschedules_portscheduleidTool(cfg),
+		tools_products_switch_configure_port_schedules.CreatePut_networks_networkid_switch_portschedules_portscheduleidTool(cfg),
+		tools_general_networks_configure_snmp.CreateGet_networks_networkid_snmpTool(cfg),
+		tools_general_networks_configure_snmp.CreatePut_networks_networkid_snmpTool(cfg),
+		tools_products_switch_configure_access_policies.CreateGet_networks_networkid_switch_accesspoliciesTool(cfg),
+		tools_products_switch_configure_access_policies.CreatePost_networks_networkid_switch_accesspoliciesTool(cfg),
+		tools_general_networks_configure_webhooks_http_servers.CreateGet_networks_networkid_webhooks_httpserversTool(cfg),
+		tools_general_networks_configure_webhooks_http_servers.CreatePost_networks_networkid_webhooks_httpserversTool(cfg),
+		tools_products_switch_configure_dscp_to_cos_mappings.CreateGet_networks_networkid_switch_dscptocosmappingsTool(cfg),
+		tools_products_switch_configure_dscp_to_cos_mappings.CreatePut_networks_networkid_switch_dscptocosmappingsTool(cfg),
+		tools_general_organizations_configure_config_templates.CreatePut_organizations_organizationid_configtemplates_configtemplateidTool(cfg),
+		tools_general_organizations_configure_config_templates.CreateDelete_organizations_organizationid_configtemplates_configtemplateidTool(cfg),
+		tools_general_organizations_configure_config_templates.CreateGet_organizations_organizationid_configtemplates_configtemplateidTool(cfg),
+		tools_general_networks_monitor_clients.CreateGet_networks_networkid_clients_clientidTool(cfg),
+		tools_general_networks_monitor_clients_application_usage.CreateGet_networks_networkid_clients_applicationusageTool(cfg),
+	}
+}
