@@ -1,4 +1,4 @@
-name: Cisco-CodeGlide MCP generation
+name: Cisco MCP generation - CodeGlide Workflow
 
 on:
   workflow_dispatch:
@@ -32,7 +32,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: codeglide MCP generator
-      uses: CodeGlide/codeglide-mcpgen@v1.0.5
+      uses: CodeGlide/codeglide-mcpgen@v1.0.6
       with:
         input_directory: ${{ inputs.input_directory }}
         create_pr: ${{ inputs.create_pr }}
