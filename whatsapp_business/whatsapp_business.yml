@@ -1,0 +1,2650 @@
+openapi: 3.0.0
+info:
+  title: Business Management API
+  description: >-
+    This public collection contains common queries, sample responses, and links
+    to supporting documentation for the [Business Management
+    API](https://developers.facebook.com/docs/whatsapp/business-management-api).
+
+
+    ## Requirements
+
+
+    To use this collection you must have a Meta **business account**, a
+    **WhatsApp Business Account**, and a **business phone number**. If you
+    complete the steps in the Cloud API [Get
+    Started](https://developers.facebook.com/docs/whatsapp/cloud-api/get-started)
+    guide, all of these will be created for you.
+
+
+    ## Environment
+
+
+    This collection has a corresponding **Business Management API** Postman
+    [environment](https://learning.postman.com/docs/sending-requests/managing-environments/)
+    which you must select when using the collection. Set **current values** for
+    the variables defined in this environment if you wish to perform the queries
+    in the collection.
+
+
+    You can find most of these values in the [WhatsApp
+    Manager](https://business.facebook.com/wa/manage/home/) or the **WhatsApp**
+    > **Getting Started** panel in the [app
+    dashboard](https://developers.facebook.com/apps), but if you have an
+    **access token** and your **business account ID**, you can use the
+    collection to get the remaining values.
+
+
+    ### Access Tokens
+
+
+    The API supports both user and system user access tokens. You can get a user
+    access token by loading your app in the [app
+    dashboard](https://developers.facebook.com/apps) and navigating to the
+    **WhatsApp** > **Getting Started** panel. Alternatively you can use the
+    [Graph API Explorer](https://developers.facebook.com/tools/explorer/) to
+    generate one.
+
+
+    Since user access tokens expire after 24 hours, you'll likely want to
+    generate a system user access token, which lasts up to 60 days (or
+    permanently, if you wish). See [System
+    Users](https://developers.facebook.com/docs/whatsapp/business-management-api/get-started#system-users)
+    to learn how to create a system user and system user access token.
+
+
+    Once you have your token, save it as a **current value** in the environment.
+
+
+    ## Business Account ID
+
+
+    You can get your business account ID by signing into the [Meta Business
+    Suite](https://business.facebook.com). The ID appears in the URL as
+    **business_id**. Once you save this as a **currrent value** in the
+    environment, go to the **WhatsApp Business Account (WABA)** folder and run
+    the **Get all owned WABAs** query. This will return your WABA ID, which you
+    can save to your environment and then use to determine your business phone
+    number ID.
+
+
+    ## Permissions
+
+
+    The API technically only relies on two permissions, but since you're likely
+    going to be using the API to generate assets in order to send messages using
+    our other APIs, we recommend that you grant your these three permissions:
+
+
+    - business_management
+
+    - whatsapp_business_management
+
+    - whatsapp_business_messaging
+        
+
+    Note that if you get a user access token from the app dashboard, it
+    automatically grants your app all three of these permissions.
+
+
+    ## Access Token Debugger
+
+
+    You can paste your token into the [access token
+    debugger](https://developers.intern.facebook.com/tools/debug/accesstoken/)
+    to see what type of token it is and what permission you have granted to your
+    app.
+
+
+    ## Pagination
+
+
+    Endpoints that return lists/collections may [paginate
+    results](https://developers.facebook.com/docs/graph-api/results) (you'll see
+    **previous** and **next** properties in the response). Use the URLs from
+    these properties to get the previous or next set of results. Note that if
+    you click one of these links in Postman, it will open a new query in a new
+    tab which you must save before running (otherwise it can't read your
+    environment variables), so you may wish to cut and paste the URL and run the
+    query in the same tab in which it was returned.
+  version: 1.0.0
+servers:
+  - url: https://graph.facebook.com
+components:
+  securitySchemes:
+    oauth2Auth:
+      type: http
+      scheme: oauth2
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+  - bearerAuth: []
+tags:
+  - name: Analytics
+    description: >-
+      - Guide:
+      [Analytics](https://developers.facebook.com/docs/whatsapp/business-management-api/analytics)
+  - name: Billing
+    description: >-
+      - Help Center Article: [About billing for your WhatsApp Business
+      Account](https://www.facebook.com/business/help/2225184664363779)
+  - name: Business accounts
+  - name: Commerce
+    description: >-
+      - Guide: [Sell Products &
+      Services](https://developers.facebook.com/docs/whatsapp/cloud-api/guides/sell-products-and-services)
+      (Cloud API)
+
+      - Guide: [Sell Products &
+      Services](https://developers.facebook.com/docs/whatsapp/on-premises/guides/commerce-guides)
+      (On-Premises API)
+  - name: Media
+    description: >-
+      - Guide: [Resumable Upload
+      API](https://developers.facebook.com/docs/graph-api/guides/upload)
+  - name: Phone numbers
+    description: >-
+      - Guide: [Phone
+      Numbers](https://developers.facebook.com/docs/whatsapp/phone-numbers)
+
+      - Guide: [Retrieve Phone
+      Numbers](https://developers.facebook.com/docs/whatsapp/business-management-api/manage-phone-numbers)
+  - name: QR codes
+    description: >-
+      - Guide: [QR
+      Codes](https://developers.facebook.com/docs/whatsapp/business-management-api/qr-codes)
+  - name: Templates
+    description: >-
+      - Guide: [Message
+      Templates](https://developers.facebook.com/docs/whatsapp/business-management-api/message-templates)
+
+      - Guide: [How To Monitor Quality
+      Signals](https://developers.facebook.com/docs/whatsapp/guides/how-to-monitor-quality-signals)
+  - name: Webhooks
+    description: >-
+      - Guide:
+      [Webhooks](https://developers.facebook.com/docs/whatsapp/business-management-api/guides/set-up-webhooks)
+
+      - Guide: [Webhook
+      Components](https://developers.facebook.com/docs/whatsapp/business-management-api/webhooks/components)
+  - name: WhatsApp Business Accounts (WABA)
+paths:
+  /{api-version}/{waba-id}:
+    get:
+      tags:
+        - WhatsApp Business Accounts (WABA)
+      summary: Get WABA
+      description: >-
+        - Endpoint reference: [WhatsApp Business
+        Account](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account)
+      parameters:
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: waba-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            ETag:
+              schema:
+                type: string
+                example: '"c39946d41277419f1b3eb1f9761f2068612715ed"'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            x-business-use-case-usage:
+              schema:
+                type: string
+                example: >-
+                  {"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}
+            x-fb-rlafr:
+              schema:
+                type: integer
+                example: '0'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v16.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: AuECIG8CyNuAbaHekReCMDU
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: Au3qI883HZc
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007269544'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  Ja/wv3Ohd34TUOD8zF8ba70aUikGGCX1SwPAPuFErmXs69aTDV0YPXaxA2Xdj+bpGHniTzMRpaJYaOyGZYEtLA==
+            Date:
+              schema:
+                type: string
+                example: Sat, 08 Apr 2023 01:05:37 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '150'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: '104996122399160'
+                name: Lucky Shrub
+                timezone_id: '1'
+                message_template_namespace: 58e6d318_b627_4112_b9c7_2961197553ea
+  /{api-version}/{business-account-id}/extendedcredits:
+    get:
+      tags:
+        - Billing
+      summary: Get credit lines
+      description: >-
+        - Endpoint reference: [Business >
+        Extendedcredits](https://developers.facebook.com/docs/marketing-api/reference/extended-credit/)
+      parameters:
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: business-account-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |
+                {
+                  "data": [
+                    {
+                      "id": "1972385232742146",    
+                      "legal_entity_name": "Lucky Shrub"
+                    }
+                  ]
+                }
+  /{api-version}/{business-account-id}:
+    get:
+      tags:
+        - Business accounts
+      summary: Get business account (specific fields)
+      description: >-
+        Endpoint reference:
+        [Business](https://developers.facebook.com/docs/marketing-api/reference/business/)
+      parameters:
+        - name: fields
+          in: query
+          schema:
+            type: string
+          example: id,name,timezone_id
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: business-account-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            ETag:
+              schema:
+                type: string
+                example: '"e9b6e9b51bf22b6dc50325d79593daee64a9438e"'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            cross-origin-resource-policy:
+              schema:
+                type: string
+                example: cross-origin
+            x-app-usage:
+              schema:
+                type: string
+                example: '{"call_count":0,"total_cputime":0,"total_time":0}'
+            x-fb-rlafr:
+              schema:
+                type: integer
+                example: '0'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v16.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: ASXeY7n8KxE4s2WPsejsx5T
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: BpUU8ro+Qyc
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007266633'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  sXZ8RdzMc/GncoPer8191i4EFUEuQglfsee5vTMgumeA8DW0ab23QsdikhTpEoo+1UXoQXkvr7fOAv5/EC6nIA==
+            Date:
+              schema:
+                type: string
+                example: Fri, 07 Apr 2023 04:40:39 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '65'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: '506914307656634'
+                name: Lucky Shrub
+                timezone_id: 0
+  /{api-version}/{business-phone-number-id}/whatsapp_commerce_settings:
+    get:
+      tags:
+        - Commerce
+      summary: Get commerce settings
+      description: >-
+        - Guide: [Sell Products &
+        Services](https://developers.facebook.com/docs/whatsapp/cloud-api/guides/sell-products-and-services)
+        (Cloud API)
+
+        - Guide: [Sell Products &
+        Services](https://developers.facebook.com/docs/whatsapp/on-premises/guides/commerce-guides)
+        (On-Premises API)
+
+        - Endpoint reference: [WhatsApp Business Phone Number > WhatsApp
+        Commerce
+        Settings](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/whatsapp_commerce_settings)
+      parameters:
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: business-phone-number-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            ETag:
+              schema:
+                type: string
+                example: '"be665e167cf848b6b62159f1d6828c494dc47008"'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            x-business-use-case-usage:
+              schema:
+                type: string
+                example: >-
+                  {"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}
+            x-fb-rlafr:
+              schema:
+                type: integer
+                example: '0'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v16.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: ATqienUCgZnGDTAHjSt_s1u
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: BZ2vk4sqqeh
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007268877'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  N/Bc7wjn7wzoGQzxpah+q29b3kn3Cu3Q5Vexydxna3Nq00SaWCkxw7wXuyFyLggvngmTAGNe60aQ2TTFzvT2hQ==
+            Date:
+              schema:
+                type: string
+                example: Fri, 07 Apr 2023 20:02:54 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '84'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  - is_cart_enabled: true
+                    is_catalog_visible: true
+                    id: '527759822865714'
+    post:
+      tags:
+        - Commerce
+      summary: Set or update commerce settings
+      description: >-
+        - Guide: [Sell Products &
+        Services](https://developers.facebook.com/docs/whatsapp/cloud-api/guides/sell-products-and-services)
+        (Cloud API)
+
+        - Guide: [Sell Products &
+        Services](https://developers.facebook.com/docs/whatsapp/on-premises/guides/commerce-guides)
+        (On-Premises API)
+
+        - Endpoint reference: [WhatsApp Business Phone Number > WhatsApp
+        Commerce
+        Settings](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/whatsapp_commerce_settings)
+      requestBody:
+        content: {}
+      parameters:
+        - name: is_cart_enabled
+          in: query
+          schema:
+            type: boolean
+          example: 'true'
+        - name: is_catalog_visible
+          in: query
+          schema:
+            type: boolean
+          example: 'true'
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: business-phone-number-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            cross-origin-resource-policy:
+              schema:
+                type: string
+                example: cross-origin
+            x-app-usage:
+              schema:
+                type: string
+                example: '{"call_count":0,"total_cputime":0,"total_time":0}'
+            x-fb-rlafr:
+              schema:
+                type: integer
+                example: '0'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v16.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: AB0EvD-U5WkosUqnPBMwXhB
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: A5pEgwxfemZ
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007268877'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  03bVIwTYJnh6qJe3sqWWNGapvvRoU/yKE+3nC45djcuaeV41y+6Z4SgWhK/SRB+WUUBEKWInR4hxFzHnKZ1+7Q==
+            Date:
+              schema:
+                type: string
+                example: Fri, 07 Apr 2023 20:01:14 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '16'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+  /{api-version}/{app-id}/uploads:
+    post:
+      tags:
+        - Media
+      summary: 'Upload media (Step 1 of 2): Create session'
+      description: >-
+        - Guide: [Resumable Upload
+        API](https://developers.facebook.com/docs/graph-api/guides/upload)
+
+        - Endpoint reference: [Application >
+        Uploads](https://developers.facebook.com/docs/graph-api/reference/application/uploads/)
+      requestBody:
+        content: {}
+      parameters:
+        - name: file_length
+          in: query
+          schema:
+            type: string
+          description: File size, in bytes
+          example: <FILE_SIZE>
+        - name: file_type
+          in: query
+          schema:
+            type: string
+          description: File MIME type (e.g. image/jpg)
+          example: <MIME_TYPE>
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: app-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            cross-origin-resource-policy:
+              schema:
+                type: string
+                example: cross-origin
+            x-app-usage:
+              schema:
+                type: string
+                example: '{"call_count":0,"total_cputime":0,"total_time":0}'
+            x-fb-rlafr:
+              schema:
+                type: integer
+                example: '0'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v16.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: AvI4pN7SAHEXqFAUxyuREbv
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: BZX/AtSddwT
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007242444'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  oSo4fVztXWCoPpG/L1MMhComdBS5YVtVMCa+HiraWcr92ku66L9tmARCDAXuiFQ2H555z4aOdSVdTKMAdMpRQA==
+            Date:
+              schema:
+                type: string
+                example: Wed, 05 Apr 2023 00:30:48 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '164'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: >-
+                  upload:MTphdHRhY2htZW50OjU5Nzc0MDgzLWRhNzgtNGEzMS1iYmRhLTVkNzEyOGEyYjFhZD9maWxlX2xlbmd0aD0yMTg5OTUxJmZpbGVfdHlwZT1pbWFnZSUyRmpwZw==?sig=ARazXSD9mAc-wPYJffA
+  /{api-version}/<SESSION_ID>:
+    post:
+      tags:
+        - Media
+      summary: 'Upload media (Step 2 of 2): Initiate upload'
+      description: >-
+        - Guide: [Resumable Upload
+        API](https://developers.facebook.com/docs/graph-api/guides/upload)
+      requestBody:
+        content:
+          text/plain: {}
+      security:
+        - oauth2Auth: []
+      parameters:
+        - name: file_offset
+          in: header
+          schema:
+            type: integer
+          example: '0'
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Date:
+              schema:
+                type: string
+                example: Wed, 05 Apr 2023 00:34:01 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '585'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                h: >-
+                  4::aW1hZ2UvanBn:ARYytyb0kLp5htbBB8vWlclG5M9gMBxiEyt4FNCvrueWBOmFmRAztEuNtPGUnEC22Etc_SAAVU0YJOk3B7A-JuR1241_nq7gfITFxXKdDGnfvw:e:1681000441:634974688087057:100089620928913:ARbB4l0IPRncfMF-1sE
+
+                  4::aW1hZ2UvanBn:ARZewDmbZuoq3rGUO1WgXjJEYcI1Tt7jr_Z6o2-oD5rg4--AQarBV_S1BYEcR8INJkctK0lNJmQ5v7PsBo-vqB-N0DSTe2-G6jHOlxKc12KSSg:e:1681000441:634974688087057:100089620928913:ARZQmT7tfO0sW--3oLo
+
+                  4::aW1hZ2UvanBn:ARZkcJXFoEMa0YMMd2WQT8aVMJFaUPlSYW9xXshyh1bP-Pd6JP4t2VbrZezqGOEfC-acYkRZA5Q31FX7dEE_hQ9a-0i-b-RaueQrWO6vWk-7bQ:e:1681000441:634974688087057:100089620928913:ARYlgv7ErOQGsZYClfs
+  /{api-version}/{business-phone-number-id}:
+    get:
+      tags:
+        - Phone numbers
+      summary: Get business phone number display name status (beta)
+      description: >-
+        - Guide: [Get Display Name Status
+        (Beta)](https://developers.facebook.com/docs/whatsapp/business-management-api/manage-phone-numbers#get-display-name-status--beta-)
+
+        - Endpoint reference: [WhatsApp Business Phone
+        Number](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/)
+      parameters:
+        - name: fields
+          in: query
+          schema:
+            type: string
+          example: id,display_phone_number,name_status
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: business-phone-number-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            ETag:
+              schema:
+                type: string
+                example: '"69d326e1ecfc32a4cebd7ab02f7d9192169ca7a7"'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            x-business-use-case-usage:
+              schema:
+                type: string
+                example: >-
+                  {"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}
+            x-fb-rlafr:
+              schema:
+                type: integer
+                example: '0'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v16.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: AjsNW3UO1ABERR1dS4ReHmk
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: C9umUEXWGPR
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007242444'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  Vl1617iTU10dJM7u10Oiabg4vJ1JEe2sVlEBq+Ht3mqJRalakB9RUWz+Q2Mp7Re35xoGuGQ4U/cefxhosJaRUQ==
+            Date:
+              schema:
+                type: string
+                example: Tue, 04 Apr 2023 23:48:20 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '86'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: '106540352242922'
+                display_phone_number: '15550783881'
+                name_status: APPROVED
+  /{api-version}/{waba-id}/phone_numbers:
+    get:
+      tags:
+        - Phone numbers
+      summary: Get all business phone numbers w/ filtering (beta)
+      description: >-
+        - Guide: [Filter Phone
+        Numbers](https://developers.facebook.com/docs/whatsapp/business-management-api/manage-phone-numbers#filter-phone-numbers)
+
+        - Endpoint reference: [WhatsApp Business Account > Phone
+        Numbers](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/phone_numbers/)
+      parameters:
+        - name: fields
+          in: query
+          schema:
+            type: string
+          example: id,is_official_business_account,display_phone_number,verified_name
+        - name: filtering
+          in: query
+          schema:
+            type: string
+          example: '[{''field'':''account_mode'',''operator'':''EQUAL'',''value'':''SANDBOX''}]'
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: waba-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /{api-version}/{business-phone-number-id}/message_qrdls/<QR_CODE_ID>:
+    get:
+      tags:
+        - QR codes
+      summary: Get QR code
+      description: >-
+        - Guide: [QR
+        Codes](https://developers.facebook.com/docs/whatsapp/business-management-api/qr-codes)
+
+        - Endpoint reference: [WhatsApp Business Phone Number > Message
+        Qrdls](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/message_qrdls/)
+      parameters:
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: business-phone-number-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            ETag:
+              schema:
+                type: string
+                example: '"eb11a43a8f1e633acc57540de90158ed9ede1eb6"'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            x-business-use-case-usage:
+              schema:
+                type: string
+                example: >-
+                  {"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v17.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: AI30jPlFHq76adVh0j6NI6M
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: Ckwb7R007I8
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007849776'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  xwYqFVM/CgvMFBdr72b1SoodwzNgzEfQ9SDpiIPeb3wE0n/sie2xgK6jFXjwpEQROxdgbLqDvJdWTH20Xbwu4Q==
+            Date:
+              schema:
+                type: string
+                example: Mon, 17 Jul 2023 17:31:52 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '145'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  - code: ANED2T5QRU7HG1
+                    prefilled_message: Show me Cyber Monday deals!
+                    deep_link_url: https://wa.me/message/ANED2T5QRU7HG1
+    delete:
+      tags:
+        - QR codes
+      summary: Delete QR code
+      description: >-
+        - Guide: [QR
+        Codes](https://developers.facebook.com/docs/whatsapp/business-management-api/qr-codes)
+
+        - Endpoint reference: [WhatsApp Business Phone Number > Message
+        Qrdls](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/message_qrdls/)
+      parameters:
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: business-phone-number-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            cross-origin-resource-policy:
+              schema:
+                type: string
+                example: cross-origin
+            x-app-usage:
+              schema:
+                type: string
+                example: '{"call_count":0,"total_cputime":0,"total_time":0}'
+            x-fb-rlafr:
+              schema:
+                type: integer
+                example: '0'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v16.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: AhAUBojpK310cV-2jph-xzV
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: AUimp6F3rsO
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007250199'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  7f+8MRyeBctLPWkPXoiwsf5fFghwJJ+g6XLnjpZpiF68Srv60WTH2pbvbeuJPhLWMqlzCWulba1OhzJPls4pUA==
+            Date:
+              schema:
+                type: string
+                example: Wed, 05 Apr 2023 18:18:08 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '16'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+  /{api-version}/{business-phone-number-id}/message_qrdls:
+    get:
+      tags:
+        - QR codes
+      summary: Get QR code PNG image URL
+      description: >-
+        - Guide: [QR
+        Codes](https://developers.facebook.com/docs/whatsapp/business-management-api/qr-codes)
+
+        - Endpoint reference: [WhatsApp Business Phone Number > Message
+        Qrdls](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/message_qrdls/)
+      parameters:
+        - name: fields
+          in: query
+          schema:
+            type: string
+          example: prefilled_message,deep_link_url,qr_image_url.format(PNG)
+        - name: code
+          in: query
+          schema:
+            type: string
+          example: <QR_CODE_ID>
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: business-phone-number-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Encoding:
+              schema:
+                type: string
+                example: br
+            ETag:
+              schema:
+                type: string
+                example: '"9f26cc417d27b958c462b202a8d4aa4f1e6d9f20"'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            x-business-use-case-usage:
+              schema:
+                type: string
+                example: >-
+                  {"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}
+            x-fb-rlafr:
+              schema:
+                type: integer
+                example: '0'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v16.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: ARQVLBnydt3HxForUiKGvlR
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: E2gR87OM4ab
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007250199'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  Zey14boRCKNY0lC6Q0kFbQP8pdJgrQl4cwbJpCkJx29aYh0OZO1+ieLkNzbKRMDOQr4dbrCXufjpV1fYe8w+fA==
+            Date:
+              schema:
+                type: string
+                example: Wed, 05 Apr 2023 17:19:14 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '354'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  - prefilled_message: Tell me more about your event planning packages
+                    deep_link_url: https://wa.me/message/FO7JXE4BG3RFG1
+                    qr_image_url: >-
+                      https://scontent-iad3-1.xx.fbcdn.net/m1/v/t6/An-H7T8OyTqO07lcRGHlKteuPMKDnx07nua3dGb4i560bVxDscweOV4KoKD_4wCDFoHR_C5LyVjxQISKPxwora1bbFhUEo2nA19ZPLBUVoQSmV12l1x-nuu312jKty-5rmojmde_a0g?ccb=10-5&oh=00_AfASq_vjojFza_9A-HDeRgHM3wZ8yjNprpYBjNKOn8RkSg&oe=64550A9E&_nc_sid=f36290
+    post:
+      tags:
+        - QR codes
+      summary: Update Message QR Code.
+      description: >-
+        - Guide: [QR
+        Codes](https://developers.facebook.com/docs/whatsapp/business-management-api/qr-codes)
+
+        - Endpoint reference: [WhatsApp Business Phone Number > Message
+        Qrdls](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/message_qrdls/)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                prefilled_message: <PREFILLED_MESSAGE>
+                code: <CODE>
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: business-phone-number-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            cross-origin-resource-policy:
+              schema:
+                type: string
+                example: cross-origin
+            x-app-usage:
+              schema:
+                type: string
+                example: '{"call_count":2,"total_cputime":0,"total_time":7}'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v17.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: ANM3JhD_nX6mId4j7RIjBgX
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: HFFijzWIcMZ
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007849776'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  zLJyZblKlLxBMqXnKHoVQeJglRBHI6oY7Pk8haMG9WkE3IVZVe5bv1wlXzAulmmkiwgzz3RFT/ds12C/i6y8Gg==
+            Date:
+              schema:
+                type: string
+                example: Mon, 17 Jul 2023 17:36:41 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '139'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: WOMVT6TJ2BP7A1
+                prefilled_message: Tell me about your new workshops
+                deep_link_url: https://wa.me/message/WOMVT6TJ2BP7A1
+  /{api-version}/<TEMPLATE_ID>:
+    get:
+      tags:
+        - Templates
+      summary: Get template by ID (default fields)
+      description: >-
+        - Guide: [Message
+        Templates](https://developers.facebook.com/docs/whatsapp/business-management-api/message-templates)
+
+        - Guide: [How To Monitor Quality
+        Signals](https://developers.facebook.com/docs/whatsapp/guides/how-to-monitor-quality-signals)
+
+        - Endpoint reference: [WhatsApp Message
+        Template](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-hsm/)
+      parameters:
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Encoding:
+              schema:
+                type: string
+                example: br
+            ETag:
+              schema:
+                type: string
+                example: '"e5d8c11dc8393ffe82fb32bea775f609f0efcc87"'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            x-business-use-case-usage:
+              schema:
+                type: string
+                example: >-
+                  {"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}
+            x-fb-rlafr:
+              schema:
+                type: integer
+                example: '0'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v16.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: AQShOun0F8Erf0hMbGBGLmQ
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: Hvd7hnyFd49
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007251231'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  svLARzFgDoUSQya1fv6vGYZoY4BkzPQToXrpR3W6k/OOk8NYFcZVvLhceUdli74kBn9gG8AobKUZdAljEF4NFw==
+            Date:
+              schema:
+                type: string
+                example: Wed, 05 Apr 2023 18:49:23 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '362'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                name: 2023_april_promo
+                components:
+                  - type: HEADER
+                    format: TEXT
+                    text: Fall Sale
+                  - type: BODY
+                    text: >-
+                      Hi {{1}}, our Fall Sale is on! Use promo code {{2}} Get an
+                      extra 25% off every order above $350!
+                    example:
+                      body_text:
+                        - - Mark
+                          - FALL25
+                  - type: FOOTER
+                    text: Not interested in any of our sales? Tap Stop Promotions
+                  - type: BUTTONS
+                    buttons:
+                      - type: QUICK_REPLY
+                        text: Stop promotions
+                language: en_US
+                status: APPROVED
+                category: MARKETING
+                id: '920070352646140'
+    post:
+      tags:
+        - Templates
+      summary: Edit template
+      description: >-
+        - Guide: [Message
+        Templates](https://developers.facebook.com/docs/whatsapp/business-management-api/message-templates)
+
+        - Guide: [How To Monitor Quality
+        Signals](https://developers.facebook.com/docs/whatsapp/guides/how-to-monitor-quality-signals)
+
+        - Endpoint reference: [WhatsApp Message
+        Template](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-hsm/)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: 2023_april_promo
+                components:
+                  - type: HEADER
+                    format: TEXT
+                    text: Fall Sale
+                  - type: BODY
+                    text: >-
+                      Hi {{1}}, our Fall Sale is on! Use promo code {{2}} Get an
+                      extra 25% off every order above $350!
+                    example:
+                      body_text:
+                        - - Mark
+                          - FALL25
+                  - type: FOOTER
+                    text: Not interested in any of our sales? Tap Stop Promotions
+                  - type: BUTTONS
+                    buttons:
+                      - type: QUICK_REPLY
+                        text: Stop promotions
+                language: en_US
+                category: MARKETING
+      parameters:
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            x-business-use-case-usage:
+              schema:
+                type: string
+                example: >-
+                  {"634974688087057":[{"type":"whatsapp_business_management","call_count":0,"total_cputime":0,"total_time":0,"estimated_time_to_regain_access":0}]}
+            x-fb-rlafr:
+              schema:
+                type: integer
+                example: '0'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v16.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: AxL3yVE-rzEh1hPOKywIZDW
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: BfPPcrAeZzp
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007268877'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  zbNYNbDIkRVjsYZD3iU+7DGcNYKDv3s4901qpUuDTKGBq20h5dU5YjKCRIlIc2+Mzs/ZqnnGk0U68tK3eYVjvA==
+            Date:
+              schema:
+                type: string
+                example: Fri, 07 Apr 2023 19:32:22 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '16'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+  /{api-version}/{waba-id}/message_templates:
+    get:
+      tags:
+        - Templates
+      summary: Get all templates (default fields)
+      description: >-
+        - Guide: [Message
+        Templates](https://developers.facebook.com/docs/whatsapp/business-management-api/message-templates)
+
+        - Guide: [How To Monitor Quality
+        Signals](https://developers.facebook.com/docs/whatsapp/guides/how-to-monitor-quality-signals)
+
+        - Endpoint reference: [WhatsApp Business Account > Message
+        Templates](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/message_templates/)
+      parameters:
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: waba-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Encoding:
+              schema:
+                type: string
+                example: br
+            ETag:
+              schema:
+                type: string
+                example: '"51f958583abc438d2081f013d228356c7be9b9cb"'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            x-business-use-case-usage:
+              schema:
+                type: string
+                example: >-
+                  {"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}
+            x-fb-rlafr:
+              schema:
+                type: integer
+                example: '0'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v16.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: A3JwLvL_TNitEV6B9e0RloV
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: DdaerLa+9CB
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007251231'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  OMiFsmGF5A90+heFzqwF4JZ9/+d7uakMs29gu7fKBCEB31ThsTmzfX8ft/X3dBTHZNk8kYjTep2hwfep+aZ2Xw==
+            Date:
+              schema:
+                type: string
+                example: Wed, 05 Apr 2023 18:46:29 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '590'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  - name: hello_world
+                    previous_category: ACCOUNT_UPDATE
+                    components:
+                      - type: HEADER
+                        format: TEXT
+                        text: Hello World
+                      - type: BODY
+                        text: >-
+                          Welcome and congratulations!! This message
+                          demonstrates your ability to send a message
+                          notification from WhatsApp Business Platform’s Cloud
+                          API. Thank you for taking the time to test with us.
+                      - type: FOOTER
+                        text: WhatsApp Business API Team
+                    language: en_US
+                    status: APPROVED
+                    category: MARKETING
+                    id: '1192339204654487'
+                  - name: 2023_april_promo
+                    components:
+                      - type: HEADER
+                        format: TEXT
+                        text: Fall Sale
+                      - type: BODY
+                        text: >-
+                          Hi {{1}}, our Fall Sale is on! Use promo code {{2}}
+                          Get an extra 25% off every order above $350!
+                        example:
+                          body_text:
+                            - - Mark
+                              - FALL25
+                      - type: FOOTER
+                        text: >-
+                          Not interested in any of our sales? Tap Stop
+                          Promotions
+                      - type: BUTTONS
+                        buttons:
+                          - type: QUICK_REPLY
+                            text: Stop promotions
+                    language: en_US
+                    status: APPROVED
+                    category: MARKETING
+                    id: '920070352646140'
+                paging:
+                  cursors:
+                    before: MAZDZD
+                    after: MjQZD
+    post:
+      tags:
+        - Templates
+      summary: >-
+        Create template w/ document header, text body, a phone number button,
+        and a URL button
+      description: >-
+        - Guide: [Message
+        Templates](https://developers.facebook.com/docs/whatsapp/business-management-api/message-templates)
+
+        - Guide: [How To Monitor Quality
+        Signals](https://developers.facebook.com/docs/whatsapp/guides/how-to-monitor-quality-signals)
+
+        - Endpoint reference: [WhatsApp Business Account > Message
+        Templates](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/message_templates/)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: order_confirmation
+                language: en_US
+                category: UTILITY
+                components:
+                  - type: HEADER
+                    format: DOCUMENT
+                    example:
+                      header_handle:
+                        - >-
+                          4::YXBwbGljYXRpb24vcGRm:ARZVv4zuogJMxmAdS3_6T4o_K4ll2806avA7rWpikisTzYPsXXUeKk0REjS-hIM1rYrizHD7rQXj951TKgUFblgd_BDWVROCwRkg9Vhjj-cHNQ:e:1681237341:634974688087057:100089620928913:ARa1ZDhwbLZM3EENeeg
+                  - type: BODY
+                    text: >-
+                      Thank you for your order, {{1}}! Your order number is
+                      {{2}}. Tap the PDF linked above to view your receipt. If
+                      you have any questions, please use the buttons below to
+                      contact support. Thanks again!
+                    example:
+                      body_text:
+                        - - Mark
+                          - 860198-230332
+                  - type: BUTTONS
+                    buttons:
+                      - type: PHONE_NUMBER
+                        text: Call
+                        phone_number: '16467043595'
+                      - type: URL
+                        text: Contact Support
+                        url: https://www.examplesite.com/support
+      parameters:
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: waba-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            x-business-use-case-usage:
+              schema:
+                type: string
+                example: >-
+                  {"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}
+            x-fb-rlafr:
+              schema:
+                type: integer
+                example: '0'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v16.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: A4STUhm0XiMwJTlYq_PrDV9
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: GLyPiVKuWzq
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007268877'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  r8Ry/p8JFtsdtanUNO3CVXgTd2XQz+r+8BFIk0zjFPXXxOoaHwNiCyGZcPpsLDpBdP/XyP64DugpEKm/YOqaDw==
+            Date:
+              schema:
+                type: string
+                example: Fri, 07 Apr 2023 18:52:24 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '65'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: '1689556908129832'
+                status: PENDING
+                category: UTILITY
+    delete:
+      tags:
+        - Templates
+      summary: Delete template by ID
+      description: >-
+        - Guide: [Message
+        Templates](https://developers.facebook.com/docs/whatsapp/business-management-api/message-templates)
+
+        - Guide: [How To Monitor Quality
+        Signals](https://developers.facebook.com/docs/whatsapp/guides/how-to-monitor-quality-signals)
+
+        - Endpoint reference: [WhatsApp Business Account > Message
+        Templates](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/message_templates/)
+      parameters:
+        - name: hsm_id
+          in: query
+          schema:
+            type: string
+          description: Template ID
+          example: <HSM_ID>
+        - name: name
+          in: query
+          schema:
+            type: string
+          description: Template name
+          example: <NAME>
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: waba-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            x-business-use-case-usage:
+              schema:
+                type: string
+                example: >-
+                  {"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}
+            x-fb-rlafr:
+              schema:
+                type: integer
+                example: '0'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v16.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: AdYqACouwJuFZWuJ6z-Zb-6
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: ADp6tYI5dOX
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007383760'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  bZ8hhZfdE97MVE74znlGSPtmnavHwev8Zkxa0dKIYEozk4+GVC1MXXCGbrfC25WV0ku5G1VmB3u7M9uq9ye/2w==
+            Date:
+              schema:
+                type: string
+                example: Wed, 26 Apr 2023 22:10:27 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '16'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+  /{api-version}/{waba-id}/subscribed_apps:
+    get:
+      tags:
+        - Webhooks
+      summary: Get all apps subscribed to WABA's webhooks
+      description: >-
+        - Guide:
+        [Webhooks](https://developers.facebook.com/docs/whatsapp/business-management-api/guides/set-up-webhooks)
+
+        - Endpoint reference: [WhatsApp Business Account > Subscribed
+        Apps](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/subscribed_apps)
+      parameters:
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: waba-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            ETag:
+              schema:
+                type: string
+                example: '"f6275804731fa4ef6316d247dc91df6785da77b2"'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            x-business-use-case-usage:
+              schema:
+                type: string
+                example: >-
+                  {"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}
+            x-fb-rlafr:
+              schema:
+                type: integer
+                example: '0'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v16.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: APGh5TlCu4eg7VzPj_aw2o8
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: GykvZIffPyl
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007268877'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  zKh1SOmMXyOA100aGp2Uzz8hPiGQzfkzvQYcllKRvb+R9laq8V//NLESAdXmIMeJOQ++O5fIE109Ml8ptCoMNg==
+            Date:
+              schema:
+                type: string
+                example: Fri, 07 Apr 2023 20:19:18 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '159'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  - whatsapp_business_api_data:
+                      link: https://www.facebook.com/games/?app_id=634974688087057
+                      name: MuttonTop Media
+                      id: '634974688087057'
+    post:
+      tags:
+        - Webhooks
+      summary: Subscribe app to WABA's webhooks
+      description: >-
+        - Guide:
+        [Webhooks](https://developers.facebook.com/docs/whatsapp/business-management-api/guides/set-up-webhooks)
+
+        - Endpoint reference: [WhatsApp Business Account > Subscribed
+        Apps](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/subscribed_apps)
+      requestBody:
+        content: {}
+      parameters:
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: waba-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            x-business-use-case-usage:
+              schema:
+                type: string
+                example: >-
+                  {"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}
+            x-fb-rlafr:
+              schema:
+                type: integer
+                example: '0'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v16.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: A7bjA-cWMeyPgzE8tW2ECuw
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: Ax+Dfc+OYKd
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007268877'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  BovZLBXelV9Y98i3XY9BML6g9fcuQFun6u6dknSTzWG9+kHJUQ97P0Seft5dOAuJKQHDrTkh3q7DkVGaqvMLHw==
+            Date:
+              schema:
+                type: string
+                example: Fri, 07 Apr 2023 20:32:10 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '16'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+    delete:
+      tags:
+        - Webhooks
+      summary: Unsubscribe app from WABA's webhooks
+      description: >-
+        - Guide:
+        [Webhooks](https://developers.facebook.com/docs/whatsapp/business-management-api/guides/set-up-webhooks)
+
+        - Endpoint reference: [WhatsApp Business Account > Subscribed
+        Apps](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/subscribed_apps)
+      parameters:
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: waba-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            x-business-use-case-usage:
+              schema:
+                type: string
+                example: >-
+                  {"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}
+            x-fb-rlafr:
+              schema:
+                type: integer
+                example: '0'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v16.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: AnfhDzYVxHSbuFYdkxpi3uG
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: CnJVgoggfUR
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007268877'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  mw9Vkv3us71gf3430EpXv4GH97KzlYtKIVCD2p+JHuaQ5INCKrMVV6ejbzjVy0KceM48gcf+2ezJCkcOL/eBZw==
+            Date:
+              schema:
+                type: string
+                example: Fri, 07 Apr 2023 20:31:50 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '16'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+  /{api-version}/{business-account-id}/client_whatsapp_business_accounts:
+    get:
+      tags:
+        - WhatsApp Business Accounts (WABA)
+      summary: Get all shared WABAs
+      description: >-
+        Endpoint reference: [Business > Extended
+        Credits](https://developers.facebook.com/docs/marketing-api/reference/business/extendedcredits/)
+      parameters:
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: business-account-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /{api-version}/{business-account-id}/owned_whatsapp_business_accounts:
+    get:
+      tags:
+        - WhatsApp Business Accounts (WABA)
+      summary: Get all owned WABAs
+      description: >-
+        Endpoint reference: [Business > Extended
+        Credits](https://developers.facebook.com/docs/marketing-api/reference/business/extendedcredits/)
+      parameters:
+        - name: api-version
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: business-account-id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Encoding:
+              schema:
+                type: string
+                example: br
+            ETag:
+              schema:
+                type: string
+                example: '"366ab827015bbd04e3737a8e0e33b755ebdb1190"'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=UTF-8
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            x-business-use-case-usage:
+              schema:
+                type: string
+                example: >-
+                  {"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}],"104996122399160":[{"type":"whatsapp_business_management","call_count":0,"total_cputime":0,"total_time":0,"estimated_time_to_regain_access":0}]}
+            x-fb-rlafr:
+              schema:
+                type: integer
+                example: '0'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+            facebook-api-version:
+              schema:
+                type: string
+                example: v16.0
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+            Cache-Control:
+              schema:
+                type: string
+                example: private, no-cache, no-store, must-revalidate
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+            x-fb-request-id:
+              schema:
+                type: string
+                example: Ah4MqTo1ZUzj81zkb2XbBje
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: EjCBhZpFH17
+            x-fb-rev:
+              schema:
+                type: integer
+                example: '1007269544'
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >-
+                  VZi3ZGTNb0Rd+lKKWI0HEaur9OTNIBff6mO7rsXN/IeCzQa8AcsdK0ef8XPzSYrHjrpTulugwFludywozAfNOQ==
+            Date:
+              schema:
+                type: string
+                example: Sat, 08 Apr 2023 01:06:45 GMT
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Length:
+              schema:
+                type: integer
+                example: '422'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  - id: '104996122399160'
+                    name: Lucky Shrub
+                    timezone_id: '1'
+                    message_template_namespace: 58e6d318_b627_4112_b9c7_2961197553ea
+                  - id: '102290129340398'
+                    name: Test WhatsApp Business Account
+                    timezone_id: '1'
+                    message_template_namespace: ba30dd89_2ebd_41e4_b805_f2c05ae04cc9
+                paging:
+                  cursors:
+                    before: >-
+                      QVFIUnpPVXRnY3BPN19rTVItOG51T291YURjV3BaeXRXU29adDVreS04ekhSNl9YWTlfdmN3SHlyTEk1a2FRdnlWanBqM1FuQm1uZAHhfYl9UMTNCYjM3MWV3
+                    after: >-
+                      QVFIUjBrRUs5QVJuUDhDSmZARMlc2dXRYNXBmMjMtRUt3SmFlbk9PRk43azdiN1VQaW1HcnRkejFzZATNoNDdTdGVWMDhjamVvY25HWnI4WjIzX0hYSk40NHhB
