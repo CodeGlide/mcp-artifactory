@@ -8,6 +8,11 @@ on:
         type: string
         required: false
         default: 'Notion'
+      custom_headers:
+        description: 'Custom headers in API requests - {"key":"value"}'
+        type: string
+        required: false
+        default: '{}'
       create_pr:
         description: 'Create PR with generated code'
         type: boolean
@@ -32,8 +37,9 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: codeglide MCP generator
-      uses: CodeGlide/codeglide-mcpgen@v1.0.7
+      uses: CodeGlide/codeglide-mcpgen@v1.0.8
       with:
         input_directory: ${{ inputs.input_directory }}
+        custom_headers: ${{ inputs.custom_headers }}
         create_pr: ${{ inputs.create_pr }}
         create_branch_and_commit: ${{ inputs.create_branch_and_commit }}
